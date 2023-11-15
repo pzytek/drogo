@@ -31,21 +31,21 @@ const Header = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
-              <Button onClick={toggleMode} bg="body">
+              <Button
+                onClick={toggleMode}
+                className="mx-3 rounded-circle d-flex btn"
+              >
                 {darkMode ? <FaMoon /> : <FaSun />}
               </Button>
-              <LinkContainer to="/cart">
+              <LinkContainer to="/cart" className="d-flex align-items-center">
                 <Nav.Link>
-                  <FaShoppingCart /> Cart
+                  <FaShoppingCart className="mx-1" /> Cart
                 </Nav.Link>
               </LinkContainer>
-              <LinkContainer to="/login">
+              <LinkContainer to="/login" className="d-flex align-items-center">
                 <Nav.Link>
-                  <FaUser /> Sign In
+                  <FaUser className="mx-1" /> Sign In
                 </Nav.Link>
-              </LinkContainer>
-              <LinkContainer to="/temp">
-                <Nav.Link>Temp</Nav.Link>
               </LinkContainer>
             </Nav>
           </Navbar.Collapse>

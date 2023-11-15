@@ -14,8 +14,10 @@ import {
 import HomeScreen from "./screens/HomeScreen";
 import Cart from "./components/Cart";
 import Login from "./components/Login";
-import Temp from "./components/Temp";
 import ProductScreen from "./screens/ProductScreen";
+
+import { store } from "./store.js";
+import { Provider } from "react-redux";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -23,7 +25,6 @@ const router = createBrowserRouter(
       <Route index element={<HomeScreen />} />
       <Route path="login" element={<Login />} />
       <Route path="cart" element={<Cart />} />
-      <Route path="temp" element={<Temp />} />
       <Route path="product/:id" element={<ProductScreen />} />
     </Route>
   )
@@ -32,7 +33,9 @@ const router = createBrowserRouter(
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </React.StrictMode>
 );
 
