@@ -11,10 +11,10 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
-import HomeScreen from "./screens/HomeScreen";
-import Cart from "./components/Cart";
 import Login from "./components/Login";
+import HomeScreen from "./screens/HomeScreen";
 import ProductScreen from "./screens/ProductScreen";
+import CartScreen from "./screens/CartScreen";
 
 import { store } from "./store.js";
 import { Provider } from "react-redux";
@@ -24,7 +24,7 @@ const router = createBrowserRouter(
     <Route path="/" element={<App />}>
       <Route index element={<HomeScreen />} />
       <Route path="login" element={<Login />} />
-      <Route path="cart" element={<Cart />} />
+      <Route path="cart" element={<CartScreen />} />
       <Route path="product/:id" element={<ProductScreen />} />
     </Route>
   )

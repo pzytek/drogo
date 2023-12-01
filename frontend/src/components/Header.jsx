@@ -1,19 +1,25 @@
 import { useState, useEffect } from "react";
-import { Navbar, Nav, Container, Button } from "react-bootstrap";
+import { useSelector } from "react-redux";
+import { Navbar, Nav, Container, Button, Badge } from "react-bootstrap";
 import { FaShoppingCart, FaUser, FaSun, FaMoon } from "react-icons/fa";
 import { LinkContainer } from "react-router-bootstrap";
 import logo from "../assets/logo2.png";
 
 const Header = () => {
+  const { cartItems } = useSelector((state) => state.cart);
+  console.log(cartItems);
   const [darkMode, setDarkMode] = useState(true);
+
   useEffect(() => {
     darkMode
       ? document.documentElement.setAttribute("data-bs-theme", "custom-dark")
       : document.documentElement.setAttribute("data-bs-theme", "custom-light");
   }, [darkMode]);
+
   const toggleMode = () => {
     setDarkMode((prevState) => !prevState);
   };
+
   return (
     <header>
       <Navbar
@@ -38,8 +44,18 @@ const Header = () => {
                 {darkMode ? <FaMoon /> : <FaSun />}
               </Button>
               <LinkContainer to="/cart" className="d-flex align-items-center">
-                <Nav.Link>
+                <Nav.Link className="position-relative">
                   <FaShoppingCart className="mx-1" /> Cart
+                  {cartItems.length > 0 && (
+                    <Badge
+                      pill
+                      bg="info"
+                      className="position-absolute"
+                      style={{ top: "-8px", left: "10px" }}
+                    >
+                      {cartItems.reduce((a, c) => a + c.qty, 0)}
+                    </Badge>
+                  )}
                 </Nav.Link>
               </LinkContainer>
               <LinkContainer to="/login" className="d-flex align-items-center">
