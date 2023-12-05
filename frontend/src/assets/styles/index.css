@@ -1,5 +1,5 @@
 body {
-  padding-top: 75px; /*correct for fixed navbar*/
+  padding-top: 100px; /*correct for fixed navbar*/
 }
 
 main {
@@ -59,4 +59,19 @@ table th {
 /* custom */
 .logo {
   height: 50px;
+}
+
+.number-align {
+  top: -2px;
+  left: 11px;
+}
+
+.cursor-pointer:hover {
+  cursor: pointer;
+}
+
+@media (max-width: 992px) {
+  .number-align {
+    left: 3px;
+  }
 }
