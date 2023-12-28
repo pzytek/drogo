@@ -3895,7 +3895,8 @@ fieldset:disabled .btn {
   --bs-nav-link-font-weight: ;
   --bs-nav-link-color: var(--bs-link-color);
   --bs-nav-link-hover-color: var(--bs-link-hover-color);
-  --bs-nav-link-disabled-color: var(--bs-secondary-color);
+  /* --bs-nav-link-disabled-color: var(--bs-secondary-color); */
+  --bs-nav-link-disabled-color: var(--bs-secondary-color-rgb); /*changed*/
   display: flex;
   flex-wrap: wrap;
   padding-left: 0;
@@ -4089,7 +4090,8 @@ fieldset:disabled .btn {
   color: var(--bs-navbar-active-color);
 }
 .navbar-nav .dropdown-menu {
-  position: static;
+  /* position: static; */
+  position: absolute; /*changed*/
 }
 
 .navbar-text {

@@ -99,9 +99,9 @@ const Header2 = () => {
                   </LinkContainer>
                   {userInfo ? (
                     <NavDropdown
-                      className="position-relative d-flex align-items-center px-2 py-1"
+                      className="d-flex align-items-center px-2 py-1"
                       title={userInfo.name}
-                      id="username"
+                      id="username222"
                     >
                       <LinkContainer to="/profile">
                         <NavDropdown.Item>Profile</NavDropdown.Item>

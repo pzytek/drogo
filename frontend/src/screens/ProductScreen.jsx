@@ -15,6 +15,7 @@ import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { useGetProductDetailsQuery } from "../slices/productsApiSlice";
 import { addToCart } from "../slices/cartSlice";
+
 const ProductScreen = () => {
   const { id: productId } = useParams();
   const [qty, setQty] = useState(1);
@@ -35,9 +36,9 @@ const ProductScreen = () => {
 
   return (
     <>
-      <Link className="btn btn-light my-3" to="/">
+      <Button className="btn mb-3" type="button" onClick={() => navigate(-1)}>
         Back
-      </Link>
+      </Button>
       {isLoading ? (
         <div>
           <Loader />
@@ -55,7 +56,7 @@ const ProductScreen = () => {
             <Col md={4}>
               <ListGroup variant="flush">
                 <ListGroup.Item>
-                  <h3>{product.name}</h3>
+                  <h3 className="my-1">{product.name}</h3>
                 </ListGroup.Item>
                 <ListGroup.Item>
                   <Rating
@@ -64,10 +65,11 @@ const ProductScreen = () => {
                   />
                 </ListGroup.Item>
                 <ListGroup.Item>
-                  <h3>Price: ${product.price}</h3>
+                  <h3 className="my-1">Price: ${product.price}</h3>
                 </ListGroup.Item>
                 <ListGroup.Item>
-                  <h3>Description: {product.description}</h3>
+                  <h3>Description: </h3>
+                  <p>{product.description}</p>
                 </ListGroup.Item>
               </ListGroup>
             </Col>
@@ -97,7 +99,7 @@ const ProductScreen = () => {
                   {product.countInStock > 0 && (
                     <ListGroup.Item>
                       <Row>
-                        <Col>Qty</Col>
+                        <Col>Qty: </Col>
                         <Col>
                           <Form.Control
                             as="select"

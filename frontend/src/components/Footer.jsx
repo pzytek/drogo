@@ -5,10 +5,10 @@ const Footer = () => {
 
   return (
     <footer>
-      <Container className="text-center py-3">
+      <Container className="text-center">
         <Row>
-          <Col className="text-center py-3">
-            <p>Drogo &copy; {currentYear}</p>
+          <Col className="text-center">
+            <p className="my-2">Drogo &copy; {currentYear}</p>
           </Col>
         </Row>
       </Container>
