@@ -14,11 +14,15 @@ import Loader from "../components/Loader";
 import {
   useGetOrderDetailsQuery,
   usePayOrderMutation,
+  useDeliverOrderMutation,
 } from "../slices/ordersApiSlice";
+import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
 const OrderScreen = () => {
   const { id: orderId } = useParams();
+
+  const { userInfo } = useSelector((state) => state.auth);
 
   const {
     data: order,
@@ -30,10 +34,19 @@ const OrderScreen = () => {
 
   const [payOrder, { isLoading: loadingPay }] = usePayOrderMutation();
 
+  const [deliverOrder, { isLoading: loadingDeliver }] =
+    useDeliverOrderMutation();
+
   const testPay = async () => {
     await payOrder({ orderId, details: { payer: {} } });
     refetch();
     toast.success("Order is paid");
+  };
+
+  const deliverOrderHandler = async () => {
+    await deliverOrder(orderId);
+    refetch();
+    toast.success("Order delivered");
   };
 
   return isLoading ? (
@@ -130,6 +143,21 @@ const OrderScreen = () => {
                   <Button onClick={testPay}>Pay Order</Button>
                 </ListGroup.Item>
               )}
+              {loadingDeliver && <Loader />}
+              {userInfo &&
+                userInfo.isAdmin &&
+                order.isPaid &&
+                !order.isDelivered && (
+                  <ListGroup.Item>
+                    <Button
+                      type="button"
+                      className="btn"
+                      onClick={deliverOrderHandler}
+                    >
+                      Mark as delivered
+                    </Button>
+                  </ListGroup.Item>
+                )}
             </ListGroup>
           </Card>
         </Col>

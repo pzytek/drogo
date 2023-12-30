@@ -21,7 +21,7 @@ const modeIconStyles = {
   className: "m-2 p-2 border rounded-circle cursor-pointer",
 };
 
-const Header2 = () => {
+const Header = () => {
   const { cartItems } = useSelector((state) => state.cart);
   const { userInfo } = useSelector((state) => state.auth);
   const [darkMode, setDarkMode] = useState(true);
@@ -84,7 +84,7 @@ const Header2 = () => {
                     to="/cart"
                     className="d-flex align-items-center"
                   >
-                    <Nav.Link className="position-relative px-2">
+                    <Nav.Link className="position-relative pr-1">
                       <FaShoppingCart className=" me-1" /> Cart
                       {cartItems.length > 0 && (
                         <Badge
@@ -99,7 +99,7 @@ const Header2 = () => {
                   </LinkContainer>
                   {userInfo ? (
                     <NavDropdown
-                      className="d-flex align-items-center px-2 py-1"
+                      className="d-flex align-items-center pr-1 py-1"
                       title={userInfo.name}
                       id="username222"
                     >
@@ -120,6 +120,23 @@ const Header2 = () => {
                       </Nav.Link>
                     </LinkContainer>
                   )}
+                  {userInfo && userInfo.isAdmin && (
+                    <NavDropdown
+                      className="d-flex align-items-center pr-1 py-1"
+                      title="Admin Functions"
+                      id="adminmenu"
+                    >
+                      <LinkContainer to="/admin/productlist">
+                        <NavDropdown.Item>Products</NavDropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to="/admin/userlist">
+                        <NavDropdown.Item>Users</NavDropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to="/admin/orderlist">
+                        <NavDropdown.Item>Orders</NavDropdown.Item>
+                      </LinkContainer>
+                    </NavDropdown>
+                  )}
                 </Nav>
                 <Form className="d-flex py-1">
                   <Form.Control
@@ -139,4 +156,4 @@ const Header2 = () => {
   );
 };
 
-export default Header2;
+export default Header;
