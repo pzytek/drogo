@@ -18,7 +18,9 @@ const Rating = ({ value, reviews }) => {
   return (
     <div className="rating">
       {stars}
-      <span className="rating-text">{reviews && reviews}</span>
+      <span className="rating-text">
+        {reviews ? `${reviews} ${reviews === 1 ? "review" : "reviews"}` : ""}
+      </span>
     </div>
   );
 };

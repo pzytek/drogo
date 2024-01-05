@@ -6,6 +6,10 @@ main {
   min-height: 80vh;
 }
 
+.rating {
+  white-space: nowrap;
+}
+
 .rating span {
   margin: 0.1rem;
 }
@@ -21,10 +25,8 @@ main {
 }
 
 .product-title {
-  height: 2.5em; /* Set a fixed height */
-  overflow: hidden; /* Hide overflow content */
-  text-overflow: ellipsis; /* Add ellipsis for long text */
-  white-space: nowrap; /* Prevent wrapping */
+  height: 2.5em;
+  text-overflow: ellipsis;
 }
 
 table td,
@@ -62,16 +64,16 @@ table th {
 }
 
 .number-align {
-  top: 1px;
-  left: 8px;
+  top: -15px;
+  left: -23px;
 }
 
 .cursor-pointer:hover {
   cursor: pointer;
 }
-
+/* 
 @media (max-width: 992px) {
   .number-align {
     top: -7px;
   }
-}
+} */

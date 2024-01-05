@@ -66,8 +66,8 @@ const ProductEditScreen = () => {
       toast.success("Product updated");
       refetch();
       navigate("/admin/productlist");
-    } catch (err) {
-      toast.error(err?.data?.message || err.error);
+    } catch (error) {
+      toast.error(error?.data?.message || error.error);
     }
   };
 
@@ -95,7 +95,9 @@ const ProductEditScreen = () => {
         {isLoading ? (
           <Loader />
         ) : error ? (
-          <Message variant="danger">{error}</Message>
+          <Message variant="danger">
+            {error?.data?.message || error.error}
+          </Message>
         ) : (
           <Form onSubmit={submitHandler}>
             <Form.Group controlId="name" className="my-2">
@@ -105,10 +107,14 @@ const ProductEditScreen = () => {
                 placeholder="Enter name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                maxLength={35}
               ></Form.Control>
+              <Form.Text>
+                {`Maximum length: 35 characters. Current length: ${name.length}`}
+              </Form.Text>
             </Form.Group>
             <Form.Group controlId="price" className="my-2">
-              <Form.Label>Price</Form.Label>
+              <Form.Label>Price ($)</Form.Label>
               <Form.Control
                 type="number"
                 placeholder="Enter price"
@@ -161,11 +167,16 @@ const ProductEditScreen = () => {
             <Form.Group controlId="description" className="my-2">
               <Form.Label>Description</Form.Label>
               <Form.Control
-                type="text"
+                as="textarea"
+                rows={3}
                 placeholder="Enter description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
+                maxLength={200}
               ></Form.Control>
+              <Form.Text>
+                {`Maximum length: 200 characters. Current length: ${description.length}`}
+              </Form.Text>
             </Form.Group>
             <Button type="submit" className="my-2">
               Update

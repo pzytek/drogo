@@ -110,6 +110,8 @@ const ProfileScreen = () => {
           <Message variant="danger">
             {error?.data?.message || error.error}
           </Message>
+        ) : orders.length === 0 ? (
+          <Message>You don't have any orders yet.</Message>
         ) : (
           <Table striped hover responsive className="table-sm">
             <thead>
