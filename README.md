@@ -28,7 +28,7 @@ https://drogo.onrender.com/
 - Orders management (Admin)
 - Users details page (Admin)
 
-# Users
+#### Users
 ```
 Admin user:
 Login: admin@email.com
@@ -39,7 +39,7 @@ Login: aaa@email.com
 Password: 123456
 ```
 
-#Sample data
+#### Sample data
 ```
 # Import data
 npm run data:import
