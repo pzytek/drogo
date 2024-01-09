@@ -2,10 +2,11 @@ import React from "react";
 import { LinkContainer } from "react-router-bootstrap";
 import { useParams } from "react-router-dom";
 import { Table, Button, Row, Col } from "react-bootstrap";
-import { FaTimes, FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
 import Paginate from "../../components/Paginate";
+import Meta from "../../components/Meta";
 import {
   useGetProductsQuery,
   useCreateProductMutation,
@@ -47,6 +48,7 @@ const ProductListScreen = () => {
 
   return (
     <>
+      <Meta title={"Drogo - Products List"} />
       <Row className="align-items-center">
         <Col>
           <h1> Products</h1>

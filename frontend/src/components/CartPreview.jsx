@@ -13,12 +13,13 @@ import {
 
 import Message from "./Message";
 import { addToCart, removeFromCart } from "../slices/cartSlice";
-const CartPreview = ({ showOffcanvas, handleClose }) => {
+import { setCartOffcanvas } from "../slices/uiSlice";
+const CartPreview = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const cart = useSelector((state) => state.cart);
-  const { cartItems } = cart;
+  const { cartItems } = useSelector((state) => state.cart);
+  const { cartOffcanvas } = useSelector((state) => state.ui);
 
   const addToCartHandler = async (product, qty) => {
     dispatch(addToCart({ ...product, qty }));
@@ -26,14 +27,20 @@ const CartPreview = ({ showOffcanvas, handleClose }) => {
 
   const checkoutHandler = () => {
     navigate("/login?redirect=/shipping");
+    dispatch(setCartOffcanvas(false));
   };
 
   const cartHandler = () => {
     navigate("/cart");
+    dispatch(setCartOffcanvas(false));
+  };
+
+  const handleClose = () => {
+    dispatch(setCartOffcanvas(false));
   };
 
   return (
-    <Offcanvas show={showOffcanvas} onHide={handleClose} placement="end">
+    <Offcanvas show={cartOffcanvas} onHide={handleClose} placement="end">
       <Offcanvas.Header closeButton>
         <Offcanvas.Title>Cart preview</Offcanvas.Title>
       </Offcanvas.Header>

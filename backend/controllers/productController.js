@@ -18,7 +18,7 @@ const getProducts = asyncHandler(async (req, res) => {
   const products = await Product.find({ ...keyword })
     .limit(pageSize)
     .skip(pageSize * (page - 1));
-  res.json({ products, page, pages: Math.ceil(count / pageSize) });
+  res.status(200).json({ products, page, pages: Math.ceil(count / pageSize) });
 });
 
 // @desc    Fetch single product
@@ -29,7 +29,7 @@ const getProductById = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id);
 
   if (product) {
-    res.json(product);
+    res.status(200).json(product);
   }
   res.status(404);
   throw new Error("Resource not found");
@@ -76,7 +76,7 @@ const updateProduct = asyncHandler(async (req, res) => {
     product.countInStock = countInStock;
 
     const updatedProduct = await product.save();
-    res.json(updatedProduct);
+    res.status(200).json(updatedProduct);
   } else {
     res.status(404);
     throw new Error("Resource not found");
@@ -144,9 +144,22 @@ const createProductReview = asyncHandler(async (req, res) => {
 // @access  Public
 
 const getTopProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find({}).sort({ rating: -1 }).limit(5);
+  const products = await Product.find({ category: "Electronics" })
+    .sort({ rating: -1 })
+    .limit(5);
 
   res.status(200).json(products);
+});
+
+// @desc    Fetch all categories
+// @route   GET /api/products/categories
+// @access  Public
+
+const getCategories = asyncHandler(async (req, res) => {
+  const uniqueCategories = await Product.distinct("category");
+  const sortedCategories = uniqueCategories.sort();
+
+  res.status(200).json({ sortedCategories });
 });
 
 export {
@@ -157,4 +170,5 @@ export {
   deleteProduct,
   createProductReview,
   getTopProducts,
+  getCategories,
 };

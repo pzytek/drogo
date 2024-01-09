@@ -12,6 +12,7 @@ import {
 } from "react-bootstrap";
 import { FaTrash } from "react-icons/fa";
 import Message from "../components/Message";
+import Meta from "../components/Meta";
 import { addToCart, removeFromCart } from "../slices/cartSlice";
 const CartScreen = () => {
   const navigate = useNavigate();
@@ -34,11 +35,13 @@ const CartScreen = () => {
 
   return (
     <Row>
+      <Meta title={"Drogo - Shopping Cart"} />
       <Col md={8}>
         <h1 style={{ marginBottom: "20px" }}>Shopping Cart</h1>
         {cartItems.length === 0 ? (
           <Message>
-            Your cart is empty. <Link to="/">Go back</Link>
+            Your cart is empty.{" "}
+            <Link to="/">Make purchase on our website!</Link>
           </Message>
         ) : (
           <ListGroup variant="flush">
@@ -57,7 +60,7 @@ const CartScreen = () => {
                     <Link to={`/product/${item._id}`}>{item.name}</Link>
                   </Col>
                   <Col md={2}>${item.price}</Col>
-                  <Col md={2}>
+                  <Col xs={10} md={2}>
                     <Form.Control
                       as="select"
                       value={item.qty}
@@ -72,7 +75,7 @@ const CartScreen = () => {
                       ))}
                     </Form.Control>
                   </Col>
-                  <Col md={2}>
+                  <Col xs={2} md={2}>
                     <Button
                       type="button"
                       onClick={() => removeFromCartHandler(item)}

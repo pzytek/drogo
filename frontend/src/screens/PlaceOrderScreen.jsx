@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import CheckoutSteps from "../components/CheckoutSteps";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
+import Meta from "../components/Meta";
 import { useCreateOrderMutation } from "../slices/ordersApiSlice";
 import { clearCartItems } from "../slices/cartSlice";
 
@@ -15,6 +16,7 @@ const PlaceOrderScreen = () => {
   const cart = useSelector((state) => state.cart);
 
   const [createOrder, { isLoading, error }] = useCreateOrderMutation();
+
   useEffect(() => {
     if (!cart.shippingAddress.address) {
       navigate("/shipping");
@@ -36,14 +38,15 @@ const PlaceOrderScreen = () => {
       }).unwrap();
       dispatch(clearCartItems());
       navigate(`/order/${res._id}`);
-    } catch (error) {
-      toast.error(error);
+    } catch (err) {
+      toast.error(err);
     }
   };
 
   return (
     <>
-      <CheckoutSteps step1 step2 step3 step4 />
+      <Meta title={"Drogo - Place Order"} />
+      <CheckoutSteps />
       <Row>
         <Col md={8}>
           <ListGroup variant="flush">
@@ -52,7 +55,8 @@ const PlaceOrderScreen = () => {
               <p>
                 <strong>Address: </strong>
                 {cart.shippingAddress.address}, {cart.shippingAddress.city}{" "}
-                {cart.shippingAddress.postalCode},{cart.shippingAddress.country}{" "}
+                {cart.shippingAddress.postalCode},{" "}
+                {cart.shippingAddress.country}
               </p>
             </ListGroup.Item>
             <ListGroup.Item>
@@ -78,9 +82,7 @@ const PlaceOrderScreen = () => {
                           />
                         </Col>
                         <Col>
-                          <Link to={`/products/${item.product}`}>
-                            {item.name}
-                          </Link>
+                          <Link to={`/product/${item._id}`}>{item.name}</Link>
                         </Col>
                         <Col md={4}>
                           {item.qty} x ${item.price} = ${item.qty * item.price}
@@ -138,11 +140,9 @@ const PlaceOrderScreen = () => {
                 </Button>
                 {isLoading && <Loader />}
               </ListGroup.Item>
-              {error && (
-                <Message variant="danger">{error.data.message}</Message>
-              )}
             </ListGroup>
           </Card>
+          {error && <Message variant="danger">{error.data.message}</Message>}
         </Col>
       </Row>
     </>

@@ -13,12 +13,12 @@ const CarouselTop = () => {
     <Message variant="danger">{error?.data?.message || error.error}</Message>
   ) : (
     <>
-      <h1>Top Products</h1>
+      <h2>Top Eelectronics</h2>
       <Carousel className="bg-primary mb-4" pause="hover">
         {products.map((product) => (
           <Carousel.Item key={product._id}>
             <Link to={`/product/${product._id}`}>
-              <Image src={product.image} alt={product.name} fluid />
+              <Image src={product.image} alt={product.name} />
               <Carousel.Caption>
                 <h2>
                   {product.name}, ${product.price}

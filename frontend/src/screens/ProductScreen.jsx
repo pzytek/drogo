@@ -13,11 +13,13 @@ import {
 import Rating from "../components/Rating";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
+import Meta from "../components/Meta";
 import {
   useGetProductDetailsQuery,
   useCreateReviewMutation,
 } from "../slices/productsApiSlice";
 import { addToCart } from "../slices/cartSlice";
+import { setLoginModal, setCartOffcanvas } from "../slices/uiSlice";
 import { toast } from "react-toastify";
 
 const ProductScreen = () => {
@@ -43,8 +45,13 @@ const ProductScreen = () => {
   const { userInfo } = useSelector((state) => state.auth);
 
   const addToCartHandler = () => {
-    dispatch(addToCart({ ...product, qty }));
-    navigate("/cart");
+    if (userInfo) {
+      dispatch(addToCart({ ...product, qty }));
+      dispatch(setCartOffcanvas(true));
+      // navigate("/cart");
+    } else {
+      dispatch(setLoginModal(true));
+    }
   };
 
   const reviewHandler = async (e) => {
@@ -78,14 +85,20 @@ const ProductScreen = () => {
         </Message>
       ) : (
         <>
+          <Meta title={product.name} />
           <Row>
             <Col md={5}>
-              <Image src={product.image} alt={product.name} fluid />
+              <Image
+                className="mb-3"
+                src={product.image}
+                alt={product.name}
+                fluid
+              />
             </Col>
             <Col md={4}>
               <ListGroup variant="flush">
-                <ListGroup.Item>
-                  <h3 className="my-1">{product.name}</h3>
+                <ListGroup.Item className="pt-0">
+                  <h3 className="mb-1">{product.name}</h3>
                 </ListGroup.Item>
                 <ListGroup.Item>
                   <Rating value={product.rating} reviews={product.numReviews} />
@@ -129,7 +142,7 @@ const ProductScreen = () => {
                         <Col>
                           <Form.Control
                             as="select"
-                            value="qty"
+                            value={qty}
                             onChange={(e) => setQty(Number(e.target.value))}
                           >
                             {[...Array(product.countInStock).keys()].map(
@@ -212,7 +225,7 @@ const ProductScreen = () => {
                     </Form>
                   ) : (
                     <Message>
-                      <Link to="/login">Sign In</Link>to add a review
+                      <Link to="/login">Sign In</Link> to add a review
                     </Message>
                   )}
                 </ListGroup.Item>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -16,7 +16,9 @@ import { LinkContainer } from "react-router-bootstrap";
 import { useLogoutMutation } from "../slices/usersApiSlice";
 import { logout } from "../slices/authSlice";
 import { resetCart } from "../slices/cartSlice";
+import { setLoginModal, setCartOffcanvas } from "../slices/uiSlice";
 import logo from "../assets/logo2.png";
+import scrollToTop from "../utils/scrollToTop";
 
 const modeIconStyles = {
   className: "m-2 p-2 border rounded-circle cursor-pointer",
@@ -26,8 +28,11 @@ const Header = () => {
   const { cartItems } = useSelector((state) => state.cart);
   const { userInfo } = useSelector((state) => state.auth);
   const [darkMode, setDarkMode] = useState(true);
+  const offCanvasRef = useRef();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const { loginModal, cartOffcanvas } = useSelector((state) => state.ui);
 
   const { keyword: urlKeyword } = useParams();
   const [keyword, setKeyword] = useState(urlKeyword || "");
@@ -41,7 +46,7 @@ const Header = () => {
       dispatch(resetCart());
       navigate("/login");
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -53,6 +58,7 @@ const Header = () => {
     } else {
       navigate("/");
     }
+    closeMenuOffcanvas();
   };
 
   useEffect(() => {
@@ -65,11 +71,17 @@ const Header = () => {
     setDarkMode((prevState) => !prevState);
   };
 
+  const closeMenuOffcanvas = () => {
+    if (offCanvasRef.current.backdrop) {
+      offCanvasRef.current.backdrop.click();
+    }
+  };
+
   return (
     <header>
       <Navbar expand="lg" bg="body" className="fixed-top border-bottom">
         <Container>
-          <LinkContainer to="/">
+          <LinkContainer to="/" onClick={scrollToTop}>
             <Navbar.Brand>
               <img src={logo} alt="Drogo logo" className="logo" />
             </Navbar.Brand>
@@ -82,11 +94,15 @@ const Header = () => {
                 <FaSun size={40} {...modeIconStyles} />
               )}
             </Nav.Item>
-            <Navbar.Toggle aria-controls="offcanvasNavbar-expand-lg" />
+            <Navbar.Toggle
+              aria-controls="offcanvasNavbar-expand-lg"
+              className="border"
+            />
             <Navbar.Offcanvas
               id="offcanvasNavbar-expand-lg"
               aria-labelledby="offcanvasNavbarLabel-expand-lg"
               placement="end"
+              ref={offCanvasRef}
             >
               <Offcanvas.Header closeButton>
                 <Offcanvas.Title id="offcanvasNavbarLabel-expand-lg">
@@ -98,7 +114,8 @@ const Header = () => {
                 <Nav className="justify-content-end flex-grow-1">
                   <LinkContainer
                     to="/cart"
-                    className="d-flex align-items-center px-2"
+                    className="d-flex align-items-center pr-2"
+                    onClick={closeMenuOffcanvas}
                   >
                     <Nav.Link className="pr-1">
                       <FaShoppingCart className=" me-1" />{" "}
@@ -122,19 +139,25 @@ const Header = () => {
                       title={userInfo.name}
                       id="username222"
                     >
-                      <LinkContainer to="/profile">
+                      <LinkContainer to="/profile" onClick={closeMenuOffcanvas}>
                         <NavDropdown.Item>Profile</NavDropdown.Item>
                       </LinkContainer>
-                      <NavDropdown.Item onClick={logoutHandler}>
+                      <NavDropdown.Item
+                        onClick={() => {
+                          closeMenuOffcanvas();
+                          logoutHandler();
+                        }}
+                      >
                         Logout
                       </NavDropdown.Item>
                     </NavDropdown>
                   ) : (
                     <LinkContainer
                       to="/login"
-                      className="d-flex align-items-center px-2"
+                      className="d-flex align-items-center pr-2"
+                      onClick={closeMenuOffcanvas}
                     >
-                      <Nav.Link>
+                      <Nav.Link className="pr-1">
                         <FaUser className="me-1" /> Sign In
                       </Nav.Link>
                     </LinkContainer>
@@ -145,13 +168,22 @@ const Header = () => {
                       title="Admin Functions"
                       id="adminmenu"
                     >
-                      <LinkContainer to="/admin/productlist">
+                      <LinkContainer
+                        to="/admin/productlist"
+                        onClick={closeMenuOffcanvas}
+                      >
                         <NavDropdown.Item>Products</NavDropdown.Item>
                       </LinkContainer>
-                      <LinkContainer to="/admin/userlist">
+                      <LinkContainer
+                        to="/admin/userlist"
+                        onClick={closeMenuOffcanvas}
+                      >
                         <NavDropdown.Item>Users</NavDropdown.Item>
                       </LinkContainer>
-                      <LinkContainer to="/admin/orderlist">
+                      <LinkContainer
+                        to="/admin/orderlist"
+                        onClick={closeMenuOffcanvas}
+                      >
                         <NavDropdown.Item>Orders</NavDropdown.Item>
                       </LinkContainer>
                     </NavDropdown>
@@ -162,7 +194,7 @@ const Header = () => {
                     type="text"
                     name="q"
                     onChange={(e) => setKeyword(e.target.value)}
-                    placeholder="What are you looking for..."
+                    placeholder="What are you looking for?"
                     className="mr-sm-2 ml-sm-5"
                   ></Form.Control>
                   <Button type="submit" className="p-2 mx-2">

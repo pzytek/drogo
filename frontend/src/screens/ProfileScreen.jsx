@@ -5,6 +5,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import { toast } from "react-toastify";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
+import Meta from "../components/Meta";
 import { FaTimes } from "react-icons/fa";
 import { useProfileMutation } from "../slices/usersApiSlice";
 import { setCredentials } from "../slices/authSlice";
@@ -44,14 +45,15 @@ const ProfileScreen = () => {
         }).unwrap();
         dispatch(setCredentials({ ...res }));
         toast.success("Profile updated successfully");
-      } catch (err) {
-        toast.error(err?.data?.message || err.error);
+      } catch (error) {
+        toast.error(error?.data?.message || error.error);
       }
     }
   };
 
   return (
     <Row>
+      <Meta title={"Drogo - User Profile"} />
       <Col md={3}>
         <h2>User Profile</h2>
 

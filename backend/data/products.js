@@ -71,6 +71,66 @@ const products = [
     rating: 4,
     numReviews: 12,
   },
+  {
+    name: "Ancient Egypt: The Definitive Visual History",
+    image: "/images/egypt.jpg",
+    description:
+      "An enticing and insightful guide that covers 3,000 years of life under the pharaohs (c. 3200-30 BCE) from the early kings of Egypt to the reign of Cleopatra and the Roman conquest, this book explains it all!",
+    brand: "DK(Author)",
+    category: "Books",
+    price: 35.99,
+    countInStock: 11,
+    rating: 4.5,
+    numReviews: 23,
+  },
+  {
+    name: "Dumplings for Beginners: 50 Recipes",
+    image: "/images/dumblings.jpg",
+    description:
+      "Dumplings are little parcels of love—juicy presents on a plate that bring joy with every savory bite. And now you can enjoy restaurant-quality potstickers, wontons, baos, and other dim sum classics without leaving the comfort of your own kitchen!",
+    brand: "Terri Dien(Author)",
+    category: "Books",
+    price: 11.99,
+    countInStock: 9,
+    rating: 5,
+    numReviews: 33,
+  },
+  {
+    name: "The New Mythic Tarot",
+    image: "/images/tarot.jpg",
+    description:
+      "From the time of its first publication in 1986, The Mythic Tarot has sold over a million copies in dozens of countries. Now, for this twenty-fifth anniversary edition, the text has been revised, brought up to date and the deck completely reillustrated by internationally renowned artist, Giovanni Caselli.",
+    brand: "Lize Greene(Author)",
+    category: "Books",
+    price: 21.49,
+    countInStock: 19,
+    rating: 4.5,
+    numReviews: 7,
+  },
+  {
+    name: "2Pack Electric Salt and Pepper Grinder",
+    image: "/images/grinder.jpg",
+    description:
+      "Rechargeable with Warm LED Light, Adjustable Coarseness Lidaop Large Capacity Automatic Salt Pepper Mill Grinder for Kitchen, Restaurant, Outdoor, Black. Just hold the button for fresh spices. Choose the perfect automatic salt and pepper grinder set for your taste by turning the knob clockwise or anticlockwise. ",
+    brand: "Lidaop",
+    category: "Kitchen",
+    price: 26.99,
+    countInStock: 12,
+    rating: 4.5,
+    numReviews: 3,
+  },
+  {
+    name: "Meiliweser Silicone Sink Splash Guard Gen 2",
+    image: "/images/sink.jpg",
+    description:
+      "Made with 100% food grade silicone, our splash guard is better than other fabrics available. It's safe, durable and easy to clean, providing long-lasting use. The slight downward slope and unique drain twill of our silicone faucet mat make it easy to get rid of excess water and keep your sink countertop dry.",
+    brand: "Meilweser",
+    category: "Kitchen",
+    price: 13.99,
+    countInStock: 11,
+    rating: 4.0,
+    numReviews: 5,
+  },
 ];
 
 export default products;

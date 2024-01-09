@@ -1,26 +1,43 @@
 import { Card, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Rating from "./Rating";
 import { addToCart } from "../slices/cartSlice";
+import { setLoginModal, setCartOffcanvas } from "../slices/uiSlice";
 
-const Product = ({ product, handleShow }) => {
+const Product = ({ product }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const cart = useSelector((state) => state.cart);
-  const { cartItems } = cart;
+  const { userInfo } = useSelector((state) => state.auth);
+  const { cartItems } = useSelector((state) => state.cart);
+  const { showLoginModal, showCartOffcanvas } = useSelector(
+    (state) => state.ui
+  );
 
   const addToCartHandler = () => {
-    const productIndex = cartItems.findIndex((x) => x._id === product._id);
-    if (productIndex === -1) {
-      dispatch(addToCart({ ...product, qty: 1 }));
+    if (userInfo) {
+      const productIndex = cartItems.findIndex((x) => x._id === product._id);
+      if (productIndex === -1) {
+        dispatch(addToCart({ ...product, qty: 1 }));
+      }
+      dispatch(setCartOffcanvas(true));
+    } else {
+      dispatch(setLoginModal(true));
     }
-    handleShow();
   };
   return (
-    <Card className="my-3 p-3 rounded">
+    <Card className="my-2 p-3 rounded">
       <Link to={`/product/${product._id}`} style={{ textDecoration: "none" }}>
-        <Card.Img src={product.image} variant="top" />
+        <Card.Img
+          src={product.image}
+          variant="top"
+          style={{
+            aspectRatio: "16/13",
+            objectFit: "cover",
+            objectPosition: "50% 0%",
+          }}
+        />
         <Card.Body className="p-1">
           <Card.Title as="div" className="product-title">
             <strong>{product.name}</strong>

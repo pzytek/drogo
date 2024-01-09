@@ -5,6 +5,7 @@ import { Form, Button, Col } from "react-bootstrap";
 import FormContainer from "../components/FormContainer";
 import CheckoutSteps from "../components/CheckoutSteps";
 import Message from "../components/Message";
+import Meta from "../components/Meta";
 import { savePaymentMethod } from "../slices/cartSlice";
 
 const PaymentScreen = () => {
@@ -13,7 +14,6 @@ const PaymentScreen = () => {
 
   const [paymentMethod, setPaymentMethod] = useState(paymentMethodSaved || "");
   const [warning, setWarning] = useState(false);
-  console.log(paymentMethod);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -40,15 +40,20 @@ const PaymentScreen = () => {
   };
 
   return (
-    <FormContainer>
-      <CheckoutSteps step1 step2 step3 />
-      <h1>Payment Method</h1>
-      <Form onSubmit={submitHandler}>
-        <Form.Group>
-          <Form.Label as="legend">Select Method</Form.Label>
-          <Col>
-            {["PayPal", "Internet Transfers", "Electronic Check Payments"].map(
-              (method) => (
+    <>
+      <CheckoutSteps step4 />
+      <FormContainer>
+        <Meta title={"Drogo - Payment Method"} />
+        <h1>Payment Method</h1>
+        <Form onSubmit={submitHandler}>
+          <Form.Group>
+            <Form.Label as="legend">Select Method</Form.Label>
+            <Col>
+              {[
+                "PayPal",
+                "Internet Transfers",
+                "Electronic Check Payments",
+              ].map((method) => (
                 <Form.Check
                   key={method}
                   type="radio"
@@ -60,16 +65,18 @@ const PaymentScreen = () => {
                   checked={paymentMethod === method}
                   onChange={(e) => handlePaymentMethodChange(e.target.value)}
                 />
-              )
-            )}
-          </Col>
-        </Form.Group>
-        <Button type="submit" variant="primary">
-          Continue
-        </Button>
-        {warning && <Message variant="warning">Choose payment method</Message>}
-      </Form>
-    </FormContainer>
+              ))}
+            </Col>
+          </Form.Group>
+          <Button type="submit" variant="primary">
+            Continue
+          </Button>
+          {warning && (
+            <Message variant="warning">Choose payment method</Message>
+          )}
+        </Form>
+      </FormContainer>
+    </>
   );
 };
 
