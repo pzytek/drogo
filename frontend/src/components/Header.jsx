@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { useMediaQuery } from "react-responsive";
 import {
   Navbar,
   Nav,
@@ -10,13 +11,13 @@ import {
   Button,
   Form,
   Offcanvas,
+  Image,
 } from "react-bootstrap";
 import { FaShoppingCart, FaUser, FaSun, FaMoon } from "react-icons/fa";
 import { LinkContainer } from "react-router-bootstrap";
 import { useLogoutMutation } from "../slices/usersApiSlice";
 import { logout } from "../slices/authSlice";
 import { resetCart } from "../slices/cartSlice";
-import { setLoginModal, setCartOffcanvas } from "../slices/uiSlice";
 import logo from "../assets/logo2.png";
 import scrollToTop from "../utils/scrollToTop";
 
@@ -32,10 +33,10 @@ const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { loginModal, cartOffcanvas } = useSelector((state) => state.ui);
-
   const { keyword: urlKeyword } = useParams();
   const [keyword, setKeyword] = useState(urlKeyword || "");
+
+  const isXxxsScreen = useMediaQuery({ maxWidth: 320 });
 
   const [logoutApiCall] = useLogoutMutation();
 
@@ -79,11 +80,13 @@ const Header = () => {
 
   return (
     <header>
-      <Navbar expand="lg" bg="body" className="fixed-top border-bottom">
+      <Navbar expand="md" bg="body" className="fixed-top border-bottom">
         <Container>
           <LinkContainer to="/" onClick={scrollToTop}>
             <Navbar.Brand>
-              <img src={logo} alt="Drogo logo" className="logo" />
+              {!isXxxsScreen && (
+                <Image src={logo} alt="Drogo logo" className="logo" />
+              )}
             </Navbar.Brand>
           </LinkContainer>
           <Nav className="d-flex flex-row align-items-center">
@@ -197,7 +200,7 @@ const Header = () => {
                     placeholder="What are you looking for?"
                     className="mr-sm-2 ml-sm-5"
                   ></Form.Control>
-                  <Button type="submit" className="p-2 mx-2">
+                  <Button type="submit" className="p-2 ms-2">
                     Search
                   </Button>
                 </Form>

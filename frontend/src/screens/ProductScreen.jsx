@@ -43,12 +43,15 @@ const ProductScreen = () => {
     useCreateReviewMutation();
 
   const { userInfo } = useSelector((state) => state.auth);
+  const { cartItems } = useSelector((state) => state.cart);
 
   const addToCartHandler = () => {
     if (userInfo) {
-      dispatch(addToCart({ ...product, qty }));
+      const productIndex = cartItems.findIndex((x) => x._id === product._id);
+      if (productIndex === -1) {
+        dispatch(addToCart({ ...product, qty: 1 }));
+      }
       dispatch(setCartOffcanvas(true));
-      // navigate("/cart");
     } else {
       dispatch(setLoginModal(true));
     }
@@ -85,7 +88,7 @@ const ProductScreen = () => {
         </Message>
       ) : (
         <>
-          <Meta title={product.name} />
+          <Meta title={`Drogo - ${product.name}`} />
           <Row>
             <Col md={5}>
               <Image

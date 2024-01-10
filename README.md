@@ -28,6 +28,7 @@ https://drogo.onrender.com/
 - Orders management (Admin)
 - Users details page (Admin)
 - Dark/light mode
+- Dynamic page names
 
 #### Users
 
@@ -57,5 +58,4 @@ npm run data:destroy
 - Bootstrap
 - React
 - Express
-- Redux
 - Redux

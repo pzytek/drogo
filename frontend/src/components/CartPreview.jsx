@@ -12,7 +12,7 @@ import {
 } from "react-bootstrap";
 
 import Message from "./Message";
-import { addToCart, removeFromCart } from "../slices/cartSlice";
+import { addToCart } from "../slices/cartSlice";
 import { setCartOffcanvas } from "../slices/uiSlice";
 const CartPreview = () => {
   const navigate = useNavigate();

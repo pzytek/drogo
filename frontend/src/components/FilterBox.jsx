@@ -64,7 +64,7 @@ const FilterBox = ({ handleFiltersChange, clearFilters, filters }) => {
           >
             Reset
           </p>
-          <Form>
+          <Col xs={6} sm={3} md={12}>
             <Form.Group>
               <Form.Label as="legend">Categories</Form.Label>
               {isLoading ? (
@@ -90,6 +90,8 @@ const FilterBox = ({ handleFiltersChange, clearFilters, filters }) => {
                 </Col>
               )}
             </Form.Group>
+          </Col>
+          <Col xs={6} sm={3} md={12}>
             <Form.Group>
               <Form.Label as="legend">Availability</Form.Label>
               <Col>
@@ -107,34 +109,8 @@ const FilterBox = ({ handleFiltersChange, clearFilters, filters }) => {
                 ))}
               </Col>
             </Form.Group>
-            <Form.Group>
-              <Form.Label as="legend">Price</Form.Label>
-              <Col>
-                {["Ascending", "Descending"].map((price) => (
-                  <Form.Check
-                    key={price}
-                    type="radio"
-                    className="my-2"
-                    label={price}
-                    id={price.split(" ").join("")}
-                    name="price"
-                    checked={filters.price === price}
-                    onChange={() => handlePriceChange(price)}
-                  />
-                ))}
-              </Col>
-              <InputGroup className="mb-2">
-                <InputGroup.Text>$</InputGroup.Text>
-                <Form.Control
-                  type="text"
-                  placeholder="Min. Price"
-                  value={filters.minPrice}
-                  onChange={(e) => handleMinPriceChange(Number(e.target.value))}
-                  className="text-end"
-                />
-              </InputGroup>
-            </Form.Group>
-
+          </Col>
+          <Col xs={6} sm={3} md={12}>
             <Form.Group>
               <Form.Label as="legend">Rating</Form.Label>
               <Col>
@@ -152,7 +128,36 @@ const FilterBox = ({ handleFiltersChange, clearFilters, filters }) => {
                 ))}
               </Col>
             </Form.Group>
-          </Form>
+          </Col>
+          <Col xs={6} sm={3} md={12}>
+            <Form.Group>
+              <Form.Label as="legend">Price</Form.Label>
+              <Col>
+                {["Ascending", "Descending"].map((price) => (
+                  <Form.Check
+                    key={price}
+                    type="radio"
+                    className="my-2"
+                    label={price}
+                    id={price.split(" ").join("")}
+                    name="price"
+                    checked={filters.price === price}
+                    onChange={() => handlePriceChange(price)}
+                  />
+                ))}
+              </Col>
+              <InputGroup className="mb-2" style={{ maxWidth: "120px" }}>
+                <InputGroup.Text>$</InputGroup.Text>
+                <Form.Control
+                  type="text"
+                  placeholder="Min."
+                  value={filters.minPrice}
+                  onChange={(e) => handleMinPriceChange(Number(e.target.value))}
+                  className="text-end"
+                />
+              </InputGroup>
+            </Form.Group>
+          </Col>
         </Row>
       </Collapse>
     </>

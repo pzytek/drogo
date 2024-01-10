@@ -143,10 +143,10 @@ const createProductReview = asyncHandler(async (req, res) => {
 // @route   GET /api/products/top
 // @access  Public
 
-const getTopProducts = asyncHandler(async (req, res) => {
+const getTopElectronics = asyncHandler(async (req, res) => {
   const products = await Product.find({ category: "Electronics" })
     .sort({ rating: -1 })
-    .limit(5);
+    .limit(6);
 
   res.status(200).json(products);
 });
@@ -169,6 +169,6 @@ export {
   updateProduct,
   deleteProduct,
   createProductReview,
-  getTopProducts,
+  getTopElectronics,
   getCategories,
 };

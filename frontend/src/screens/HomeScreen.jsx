@@ -50,7 +50,8 @@ const HomeScreen = () => {
   return (
     <>
       <Row>
-        <Col md={2}>
+        <Col sm={12} md={2}>
+          {" "}
           <FilterBox
             handleFiltersChange={handleFiltersChange}
             clearFilters={clearFilters}
@@ -74,7 +75,7 @@ const HomeScreen = () => {
                   </Message>
                 ) : (
                   filteredProducts.map((product) => (
-                    <Col key={product._id} sm={12} md={6} lg={4}>
+                    <Col key={product._id} sm={6} md={6} lg={4} xl={3}>
                       <Product product={product} />
                     </Col>
                   ))
