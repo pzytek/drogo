@@ -1,32 +1,32 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
-import { useParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 
-const SearchBox = () => {
+const SearchBox = ({ closeMenuOffcanvas }) => {
   const navigate = useNavigate();
-  const { keyword: urlKeyword } = useParams();
-  const [keyword, setKeyword] = useState(urlKeyword || "");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const keywordUrl = searchParams.get("keyword");
+  const [keyword, setKeyword] = useState(keywordUrl || "");
 
-  const submitHandler = (e) => {
+  const searchHandler = (e) => {
     e.preventDefault();
-    if (keyword) {
-      navigate(`/search/${keyword.trim()}`);
-      setKeyword("");
-    } else {
-      navigate("/");
-    }
+    navigate("/");
+    searchParams.set("keyword", keyword.trim());
+    setSearchParams(searchParams);
+    closeMenuOffcanvas();
   };
 
   return (
-    <Form onSubmit={submitHandler} className="d-flex">
+    <Form onSubmit={searchHandler} className="d-flex">
       <Form.Control
         type="text"
         name="q"
         onChange={(e) => setKeyword(e.target.value)}
-        placeholder="What are you looking for..."
+        value={keyword}
+        placeholder="What are you looking for?"
         className="mr-sm-2 ml-sm-5"
       ></Form.Control>
-      <Button type="submit" className="p-2 mx-2">
+      <Button type="submit" className="p-2 ms-2">
         Search
       </Button>
     </Form>

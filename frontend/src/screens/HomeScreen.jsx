@@ -1,6 +1,5 @@
-import { useState } from "react";
-import { Row, Col, Button } from "react-bootstrap";
-import { useNavigate, useParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
+import { Row, Col } from "react-bootstrap";
 import Product from "../components/Product";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
@@ -9,54 +8,38 @@ import CarouselTop from "../components/CarouselTop";
 import FilterBox from "../components/FilterBox";
 import Meta from "../components/Meta";
 import { useGetProductsQuery } from "../slices/productsApiSlice";
-import filterProducts from "../utils/filterProducts";
 
 const HomeScreen = () => {
-  const navigate = useNavigate();
-  const { pageNumber, keyword } = useParams();
+  const [searchParams] = useSearchParams();
+
+  const keyword = searchParams.get("keyword") || "";
+  const pageNumber = searchParams.get("pageNumber") || "";
+  const categories = searchParams.getAll("categories") || [];
+  const availability = searchParams.get("availability") || "All";
+  const price = searchParams.get("price") || "";
+  const minPrice = searchParams.get("minPrice") || "";
+  const rating = searchParams.get("rating") || 0;
 
   const {
-    data: { page, pages, products = [] } = {},
+    data: { pages, products = [] } = {},
     isLoading,
     error,
   } = useGetProductsQuery({
     pageNumber,
     keyword,
+    categories,
+    availability,
+    price,
+    minPrice,
+    rating,
   });
-
-  const [filters, setFilters] = useState({
-    categories: [],
-    availability: "All",
-    price: "",
-    minPrice: "",
-    rating: 0,
-  });
-  const filteredProducts = filterProducts(products, filters);
-
-  const handleFiltersChange = (data) => {
-    setFilters((prevFilters) => ({ ...prevFilters, ...data }));
-  };
-
-  const clearFilters = () => {
-    setFilters({
-      categories: [],
-      availability: "All",
-      price: "",
-      minPrice: "",
-      rating: 0,
-    });
-  };
 
   return (
     <>
       <Row>
-        <Col sm={12} md={2}>
+        <Col sm={12} md={3} lg={2}>
           {" "}
-          <FilterBox
-            handleFiltersChange={handleFiltersChange}
-            clearFilters={clearFilters}
-            filters={filters}
-          />
+          <FilterBox />
         </Col>
         <Col>
           {isLoading && <Loader />}
@@ -69,35 +52,24 @@ const HomeScreen = () => {
             <>
               <Meta />
               <Row>
-                {filteredProducts.length === 0 ? (
+                {products.length === 0 ? (
                   <Message>
                     No results found. Please adjust your search criteria.
                   </Message>
                 ) : (
-                  filteredProducts.map((product) => (
-                    <Col key={product._id} sm={6} md={6} lg={4} xl={3}>
+                  products.map((product) => (
+                    <Col key={product._id} sm={6} md={6} lg={4}>
                       <Product product={product} />
                     </Col>
                   ))
                 )}
               </Row>
-              <Paginate
-                pages={pages}
-                page={page}
-                keyword={keyword ? keyword : ""}
-              />
+              {products.length > 0 && <Paginate pages={pages} />}
             </>
           )}
         </Col>
       </Row>
-
-      {!keyword ? (
-        <CarouselTop />
-      ) : (
-        <Button className="btn mb-3" type="button" onClick={() => navigate(-1)}>
-          Back
-        </Button>
-      )}
+      <CarouselTop />
     </>
   );
 };

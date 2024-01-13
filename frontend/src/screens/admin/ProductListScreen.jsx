@@ -1,6 +1,5 @@
 import React from "react";
 import { LinkContainer } from "react-router-bootstrap";
-import { useParams } from "react-router-dom";
 import { Table, Button, Row, Col } from "react-bootstrap";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import Message from "../../components/Message";
@@ -13,12 +12,20 @@ import {
   useDeleteProductMutation,
 } from "../../slices/productsApiSlice";
 import { toast } from "react-toastify";
+import { useSearchParams } from "react-router-dom";
 
 const ProductListScreen = () => {
-  const { pageNumber } = useParams();
+  const [searchParams] = useSearchParams();
+  const pageNumber = searchParams.get("pageNumber");
 
   const { data, isLoading, error, refetch } = useGetProductsQuery({
     pageNumber,
+    keyword: "",
+    categories: [],
+    availability: "All",
+    price: "",
+    minPrice: "",
+    rating: 0,
   });
 
   const [createProduct, { isLoading: loadingCreate }] =
@@ -89,13 +96,16 @@ const ProductListScreen = () => {
                   <td>{product.brand}</td>
                   <td>
                     <LinkContainer to={`/admin/product/${product._id}/edit`}>
-                      <Button variant="light" className="btn-sm mx-2 border">
+                      <Button
+                        variant="light"
+                        className="btn-sm mx-2 my-1 border"
+                      >
                         <FaEdit />
                       </Button>
                     </LinkContainer>
                     <Button
                       variant="danger"
-                      className="btn-sm"
+                      className="btn-sm my-1"
                       onClick={() => {
                         deleteProductHandler(product._id);
                       }}

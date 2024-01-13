@@ -1,24 +1,40 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import Product from "../models/productModel.js";
+import filterProducts from "../utils/filterProducts.js";
 
 // @desc    Fetch all products
 // @route   GET /api/products
 // @access  Public
 
 const getProducts = asyncHandler(async (req, res) => {
+  const filters = req.query;
+  console.log(filters);
   const pageSize = process.env.PAGINATION_LIMIT;
-  const page = Number(req.query.pageNumber) || 1;
+  const pageNumber = Number(req.query.pageNumber) || 1;
 
   const keyword = req.query.keyword
     ? { name: { $regex: req.query.keyword, $options: "i" } }
     : {};
 
   const count = await Product.countDocuments({ ...keyword });
+  const productsByKeyword = await Product.find({ ...keyword });
+  // .limit(pageSize)
+  // .skip(pageSize * (pageNumber - 1));
 
-  const products = await Product.find({ ...keyword })
-    .limit(pageSize)
-    .skip(pageSize * (page - 1));
-  res.status(200).json({ products, page, pages: Math.ceil(count / pageSize) });
+  const products = filterProducts(productsByKeyword, filters);
+  console.log(
+    // "count:",
+    // count,
+    "products.length: ",
+    products.length,
+    "productsByKeyword.length: ",
+    productsByKeyword.length,
+    "pages:",
+    Math.ceil(count / pageSize),
+    "pageNumber: ",
+    pageNumber
+  );
+  res.status(200).json({ products, pages: Math.ceil(count / pageSize) });
 });
 
 // @desc    Fetch single product
@@ -140,7 +156,7 @@ const createProductReview = asyncHandler(async (req, res) => {
 });
 
 // @desc    Get top products
-// @route   GET /api/products/top
+// @route   GET /api/products/top-electronics
 // @access  Public
 
 const getTopElectronics = asyncHandler(async (req, res) => {
@@ -156,10 +172,19 @@ const getTopElectronics = asyncHandler(async (req, res) => {
 // @access  Public
 
 const getCategories = asyncHandler(async (req, res) => {
-  const uniqueCategories = await Product.distinct("category");
-  const sortedCategories = uniqueCategories.sort();
+  const sortedCategories = await Product.distinct("category").sort();
 
-  res.status(200).json({ sortedCategories });
+  const products = await Product.find({});
+  const categoryItems = [];
+
+  sortedCategories.forEach((category) => {
+    const productsInCategory = products.filter(
+      (product) => product.category === category
+    );
+    categoryItems.push({ name: category, qty: productsInCategory.length });
+  });
+
+  res.status(200).json({ categoryItems });
 });
 
 export {

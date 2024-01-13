@@ -1,57 +1,50 @@
-import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Col, Row, Form, Collapse, InputGroup, Button } from "react-bootstrap";
+import { useSearchParams } from "react-router-dom";
 import { FaFilter } from "react-icons/fa";
 import { useGetCategoriesQuery } from "../slices/productsApiSlice";
+import { setFiltersColumn } from "../slices/uiSlice";
 import Loader from "./Loader";
 import Message from "./Message";
 import Rating from "./Rating";
 
-const FilterBox = ({ handleFiltersChange, clearFilters, filters }) => {
-  const [showFilters, setShowFilters] = useState(true);
+const FilterBox = () => {
+  const dispatch = useDispatch();
+  const { filtersColumn } = useSelector((state) => state.ui);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const categories = searchParams.getAll("categories") || [];
+  const availability = searchParams.get("availability") || "All";
+  const price = searchParams.get("price") || "";
+  const minPrice = searchParams.get("minPrice") || "";
+  const rating = searchParams.get("rating") || 0;
 
   const {
-    data: { sortedCategories = [] } = {},
+    data: { categoryItems = [] } = {},
     isLoading,
     error,
   } = useGetCategoriesQuery();
 
   const showFiltersHandler = () => {
-    setShowFilters((prevState) => !prevState);
+    dispatch(setFiltersColumn(!filtersColumn));
   };
 
-  const handleAvailabilityChange = (availability) => {
-    handleFiltersChange({ availability });
+  const resetFiltersHandler = () => {
+    setSearchParams({});
   };
 
-  const handlePriceChange = (price) => {
-    handleFiltersChange({ price });
-  };
-
-  const handleMinPriceChange = (minPrice) => {
-    handleFiltersChange({ minPrice });
-  };
-
-  const handleRatingChange = (rating) => {
-    handleFiltersChange({ rating });
-  };
-
-  const handleCategoryChange = (addedCategory) => {
-    const hasCategory = filters.categories.includes(addedCategory);
-
-    const newCategories = hasCategory
-      ? filters.categories.filter((category) => category !== addedCategory)
-      : [...filters.categories, addedCategory];
-
-    handleFiltersChange({ categories: newCategories });
+  const handleFilterChange = (name, value) => {
+    searchParams.set(name, value);
+    setSearchParams(searchParams);
   };
 
   return (
     <>
       <Button onClick={showFiltersHandler} className="mt-2 w-100">
-        <FaFilter /> {showFilters ? "Hide filters" : "Show filters"}
+        <FaFilter /> {filtersColumn ? "Hide filters" : "Show filters"}
       </Button>
 
-      <Collapse in={showFilters}>
+      <Collapse in={filtersColumn}>
         <Row>
           <p
             className="cursor-pointer mb-0"
@@ -60,7 +53,7 @@ const FilterBox = ({ handleFiltersChange, clearFilters, filters }) => {
               textAlign: "right",
               width: "100%",
             }}
-            onClick={() => clearFilters()}
+            onClick={resetFiltersHandler}
           >
             Reset
           </p>
@@ -75,16 +68,18 @@ const FilterBox = ({ handleFiltersChange, clearFilters, filters }) => {
                 </Message>
               ) : (
                 <Col>
-                  {sortedCategories.map((category) => (
+                  {categoryItems.map((category) => (
                     <Form.Check
-                      key={category}
+                      key={category.name}
                       type="checkbox"
-                      className="my-2"
-                      label={category}
-                      id={category.split(" ").join("")}
+                      className="my-2 text-nowrap"
+                      label={`${category.name} (${category.qty})`}
+                      id={category.name.split(" ").join("")}
                       name="categories"
-                      checked={filters.categories.includes(category)}
-                      onChange={() => handleCategoryChange(category)}
+                      checked={categories.includes(category.name)}
+                      onChange={() =>
+                        handleFilterChange("categories", category.name)
+                      }
                     />
                   ))}
                 </Col>
@@ -95,18 +90,22 @@ const FilterBox = ({ handleFiltersChange, clearFilters, filters }) => {
             <Form.Group>
               <Form.Label as="legend">Availability</Form.Label>
               <Col>
-                {["All", "In stock", "Out of stock"].map((availability) => (
-                  <Form.Check
-                    key={availability}
-                    type="radio"
-                    className="my-2"
-                    label={availability}
-                    id={availability.split(" ").join("")}
-                    name="availability"
-                    checked={filters.availability === availability}
-                    onChange={() => handleAvailabilityChange(availability)}
-                  />
-                ))}
+                {["All", "In stock", "Out of stock"].map(
+                  (arrayAvailability) => (
+                    <Form.Check
+                      key={arrayAvailability}
+                      type="radio"
+                      className="my-2"
+                      label={arrayAvailability}
+                      id={arrayAvailability.split(" ").join("")}
+                      name="availability"
+                      checked={arrayAvailability === availability}
+                      onChange={() =>
+                        handleFilterChange("availability", arrayAvailability)
+                      }
+                    />
+                  )
+                )}
               </Col>
             </Form.Group>
           </Col>
@@ -114,16 +113,16 @@ const FilterBox = ({ handleFiltersChange, clearFilters, filters }) => {
             <Form.Group>
               <Form.Label as="legend">Rating</Form.Label>
               <Col>
-                {[5.0, 4.5, 4.0].map((rating) => (
+                {["5.0", "4.5", "4.0"].map((arrayRating) => (
                   <Form.Check
-                    key={rating}
+                    key={arrayRating}
                     type="radio"
                     className="my-2"
-                    label={<Rating value={rating} reviews={0} />}
-                    id={String(rating)}
+                    label={<Rating value={arrayRating} reviews={0} />}
+                    id={String(arrayRating)}
                     name="rating"
-                    checked={rating === filters.rating}
-                    onChange={() => handleRatingChange(rating)}
+                    checked={arrayRating === rating}
+                    onChange={() => handleFilterChange("rating", arrayRating)}
                   />
                 ))}
               </Col>
@@ -133,16 +132,16 @@ const FilterBox = ({ handleFiltersChange, clearFilters, filters }) => {
             <Form.Group>
               <Form.Label as="legend">Price</Form.Label>
               <Col>
-                {["Ascending", "Descending"].map((price) => (
+                {["Ascending", "Descending"].map((arrayPrice) => (
                   <Form.Check
-                    key={price}
+                    key={arrayPrice}
                     type="radio"
                     className="my-2"
-                    label={price}
-                    id={price.split(" ").join("")}
+                    label={arrayPrice}
+                    id={arrayPrice.split(" ").join("")}
                     name="price"
-                    checked={filters.price === price}
-                    onChange={() => handlePriceChange(price)}
+                    checked={arrayPrice === price}
+                    onChange={() => handleFilterChange("price", arrayPrice)}
                   />
                 ))}
               </Col>
@@ -151,8 +150,10 @@ const FilterBox = ({ handleFiltersChange, clearFilters, filters }) => {
                 <Form.Control
                   type="text"
                   placeholder="Min."
-                  value={filters.minPrice}
-                  onChange={(e) => handleMinPriceChange(Number(e.target.value))}
+                  value={minPrice}
+                  onChange={(e) =>
+                    handleFilterChange("minPrice", Number(e.target.value))
+                  }
                   className="text-end"
                 />
               </InputGroup>

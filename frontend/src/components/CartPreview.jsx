@@ -1,6 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-
 import {
   Row,
   Col,
@@ -10,7 +9,6 @@ import {
   Button,
   Offcanvas,
 } from "react-bootstrap";
-
 import Message from "./Message";
 import { addToCart } from "../slices/cartSlice";
 import { setCartOffcanvas } from "../slices/uiSlice";
@@ -65,7 +63,9 @@ const CartPreview = () => {
                         ></Image>
                       </Col>
                       <Col xs={5}>
-                        <Link to={`/product/${item._id}`}>{item.name}</Link>
+                        <Link to={`/product/${item._id}`} onClick={handleClose}>
+                          {item.name}
+                        </Link>
                       </Col>
                       <Col xs={2}>${item.price}</Col>
                       <Col xs={2}>

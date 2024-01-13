@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useMediaQuery } from "react-responsive";
 import {
@@ -8,8 +8,6 @@ import {
   NavDropdown,
   Container,
   Badge,
-  Button,
-  Form,
   Offcanvas,
   Image,
 } from "react-bootstrap";
@@ -20,6 +18,8 @@ import { logout } from "../slices/authSlice";
 import { resetCart } from "../slices/cartSlice";
 import logo from "../assets/logo2.png";
 import scrollToTop from "../utils/scrollToTop";
+import { toast } from "react-toastify";
+import SearchBox from "./SearchBox";
 
 const modeIconStyles = {
   className: "m-2 p-2 border rounded-circle cursor-pointer",
@@ -33,9 +33,6 @@ const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { keyword: urlKeyword } = useParams();
-  const [keyword, setKeyword] = useState(urlKeyword || "");
-
   const isXxxsScreen = useMediaQuery({ maxWidth: 320 });
 
   const [logoutApiCall] = useLogoutMutation();
@@ -45,21 +42,11 @@ const Header = () => {
       await logoutApiCall().unwrap();
       dispatch(logout());
       dispatch(resetCart());
-      navigate("/login");
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const searchHandler = (e) => {
-    e.preventDefault();
-    if (keyword) {
-      navigate(`/search/${keyword.trim()}`);
-      setKeyword("");
-    } else {
       navigate("/");
+      toast.success("Logged out successfully");
+    } catch (error) {
+      toast.error(error);
     }
-    closeMenuOffcanvas();
   };
 
   useEffect(() => {
@@ -192,18 +179,7 @@ const Header = () => {
                     </NavDropdown>
                   )}
                 </Nav>
-                <Form onSubmit={searchHandler} className="d-flex">
-                  <Form.Control
-                    type="text"
-                    name="q"
-                    onChange={(e) => setKeyword(e.target.value)}
-                    placeholder="What are you looking for?"
-                    className="mr-sm-2 ml-sm-5"
-                  ></Form.Control>
-                  <Button type="submit" className="p-2 ms-2">
-                    Search
-                  </Button>
-                </Form>
+                <SearchBox closeMenuOffcanvas={closeMenuOffcanvas} />
               </Offcanvas.Body>
             </Navbar.Offcanvas>
           </Nav>

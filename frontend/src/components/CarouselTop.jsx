@@ -40,7 +40,7 @@ const CarouselTop = () => {
   ) : (
     <>
       <h2>Top Eelectronics</h2>
-      <Carousel pause="hover">
+      <Carousel pause="hover" fade>
         {products.map((product, index, array) => {
           const nextProduct =
             index < array.length - 1 ? array[index + 1] : array[0];
