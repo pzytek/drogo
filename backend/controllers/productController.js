@@ -8,33 +8,26 @@ import filterProducts from "../utils/filterProducts.js";
 
 const getProducts = asyncHandler(async (req, res) => {
   const filters = req.query;
-  console.log(filters);
-  const pageSize = process.env.PAGINATION_LIMIT;
-  const pageNumber = Number(req.query.pageNumber) || 1;
 
-  const keyword = req.query.keyword
-    ? { name: { $regex: req.query.keyword, $options: "i" } }
+  const pageSize = process.env.PAGINATION_LIMIT;
+  const pageNumber = Number(filters.pageNumber) || 1;
+  const startIndex = (pageNumber - 1) * pageSize;
+  const endIndex = pageNumber * pageSize;
+
+  const keyword = filters.keyword
+    ? { name: { $regex: filters.keyword, $options: "i" } }
     : {};
 
-  const count = await Product.countDocuments({ ...keyword });
   const productsByKeyword = await Product.find({ ...keyword });
-  // .limit(pageSize)
-  // .skip(pageSize * (pageNumber - 1));
 
-  const products = filterProducts(productsByKeyword, filters);
-  console.log(
-    // "count:",
-    // count,
-    "products.length: ",
-    products.length,
-    "productsByKeyword.length: ",
-    productsByKeyword.length,
-    "pages:",
-    Math.ceil(count / pageSize),
-    "pageNumber: ",
-    pageNumber
-  );
-  res.status(200).json({ products, pages: Math.ceil(count / pageSize) });
+  const filteredProducts = filterProducts(productsByKeyword, filters);
+  const pages = Math.ceil(filteredProducts.length / pageSize);
+  const products = filteredProducts.slice(startIndex, endIndex);
+
+  res.status(200).json({
+    products,
+    pages,
+  });
 });
 
 // @desc    Fetch single product

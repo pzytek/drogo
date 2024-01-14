@@ -1,12 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
 const SearchBox = ({ closeMenuOffcanvas }) => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const keywordUrl = searchParams.get("keyword");
-  const [keyword, setKeyword] = useState(keywordUrl || "");
+  const keywordUrl = searchParams.get("keyword") || "";
+  const [keyword, setKeyword] = useState(keywordUrl);
+
+  useEffect(() => {
+    setKeyword(keywordUrl);
+  }, [keywordUrl]);
 
   const searchHandler = (e) => {
     e.preventDefault();

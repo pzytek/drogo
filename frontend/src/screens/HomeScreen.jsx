@@ -64,7 +64,7 @@ const HomeScreen = () => {
                   ))
                 )}
               </Row>
-              {products.length > 0 && <Paginate pages={pages} />}
+              <Paginate pages={pages} />
             </>
           )}
         </Col>

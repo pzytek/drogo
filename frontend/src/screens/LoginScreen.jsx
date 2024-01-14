@@ -78,7 +78,7 @@ const LoginScreen = () => {
             <div>
               <strong>Admin</strong>
               <p className="mb-0">Email: admin@email.com</p>
-              <p>Password: 123456</p>
+              <p className="mb-0">Password: 123456</p>
               <strong>User</strong>
               <p className="mb-0">Email: meryl@email.com</p>
               <p className="mb-1">Password: 123456</p>

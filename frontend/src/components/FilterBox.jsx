@@ -12,7 +12,6 @@ const FilterBox = () => {
   const dispatch = useDispatch();
   const { filtersColumn } = useSelector((state) => state.ui);
   const [searchParams, setSearchParams] = useSearchParams();
-
   const categories = searchParams.getAll("categories") || [];
   const availability = searchParams.get("availability") || "All";
   const price = searchParams.get("price") || "";
@@ -34,7 +33,22 @@ const FilterBox = () => {
   };
 
   const handleFilterChange = (name, value) => {
-    searchParams.set(name, value);
+    if (name !== "categories") {
+      searchParams.set(name, value);
+    } else {
+      const isInCategories = categories.includes(value);
+      if (isInCategories) {
+        const newCategories = categories.filter(
+          (category) => category !== value
+        );
+        searchParams.delete(name);
+        newCategories.forEach((newCategory) => {
+          searchParams.append(name, newCategory);
+        });
+      } else {
+        searchParams.append(name, value);
+      }
+    }
     setSearchParams(searchParams);
   };
 
