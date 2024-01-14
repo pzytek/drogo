@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import scrollToTop from "../utils/scrollToTop";
 
 const SearchBox = ({ closeMenuOffcanvas }) => {
   const navigate = useNavigate();
@@ -16,8 +17,10 @@ const SearchBox = ({ closeMenuOffcanvas }) => {
     e.preventDefault();
     navigate("/");
     searchParams.set("keyword", keyword.trim());
+    searchParams.delete("pageNumber");
     setSearchParams(searchParams);
     closeMenuOffcanvas();
+    scrollToTop();
   };
 
   return (

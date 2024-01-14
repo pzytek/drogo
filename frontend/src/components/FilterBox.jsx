@@ -49,6 +49,7 @@ const FilterBox = () => {
         searchParams.append(name, value);
       }
     }
+    searchParams.delete("pageNumber");
     setSearchParams(searchParams);
   };
 
