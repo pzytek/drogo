@@ -1,6 +1,12 @@
+import React from "react";
 import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 
-const Rating = ({ value, reviews }) => {
+interface RatingProps {
+  value: number;
+  reviews: number;
+}
+
+const Rating: React.FC<RatingProps> = ({ value, reviews }) => {
   const stars = Array.from({ length: 5 }, (_, index) => {
     const starValue = index + 1;
     return (

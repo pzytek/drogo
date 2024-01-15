@@ -1,9 +1,44 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { updateCart } from "../utils/cartUtils";
 
-const initialState = localStorage.getItem("cart")
-  ? JSON.parse(localStorage.getItem("cart"))
-  : { cartItems: [], shippingAddress: {}, paymentMethod: "PayPal" };
+interface Review {
+  user: string;
+  name: string;
+  rating: number;
+  comment: string;
+}
+
+interface Item {
+  _id: string;
+  user: string;
+  name: string;
+  image: string;
+  brand: string;
+  cateogory: string;
+  description: string;
+  rating: number;
+  numReviews: number;
+  price: number;
+  countInStock: number;
+  reviews: Review[];
+  qty: number;
+}
+
+interface CartState {
+  cartItems: Item[];
+  shippingAddress: object;
+  paymentMethod: string;
+  itemsPrice: number;
+  shippingPrice: number;
+  taxPrice: number;
+  totalPrice: number;
+}
+
+const cartJson = localStorage.getItem("cart");
+
+const initialState: CartState = cartJson
+  ? JSON.parse(cartJson)
+  : { cartItems: [], shippingAddress: {}, paymentMethod: "" };
 
 const cartSlice = createSlice({
   name: "cart",
@@ -11,7 +46,7 @@ const cartSlice = createSlice({
   reducers: {
     addToCart: (state, action) => {
       const item = action.payload;
-
+      console.log(action.payload);
       const existItem = state.cartItems.find((x) => x._id === item._id);
 
       if (existItem) {
@@ -21,7 +56,7 @@ const cartSlice = createSlice({
       } else {
         state.cartItems = [...state.cartItems, item];
       }
-
+      console.log(state);
       return updateCart(state);
     },
     removeFromCart: (state, action) => {
@@ -39,7 +74,7 @@ const cartSlice = createSlice({
       state.paymentMethod = action.payload;
       return updateCart(state);
     },
-    clearCartItems: (state, action) => {
+    clearCartItems: (state) => {
       state.cartItems = [];
       localStorage.setItem("cart", JSON.stringify(state));
     },
@@ -55,5 +90,7 @@ export const {
   clearCartItems,
   resetCart,
 } = cartSlice.actions;
+
+export { CartState };
 
 export default cartSlice.reducer;

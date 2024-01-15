@@ -30,7 +30,7 @@ import ProductEditScreen from "./screens/admin/ProductEditScreen";
 import UserListScreen from "./screens/admin/UserListScreen";
 import UserEditScreen from "./screens/admin/UserEditScreen";
 
-import { store } from "./store.ts";
+import { store } from "./store";
 import { Provider } from "react-redux";
 import { HelmetProvider } from "react-helmet-async";
 

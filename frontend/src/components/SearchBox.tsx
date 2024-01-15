@@ -1,19 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import scrollToTop from "../utils/scrollToTop";
 
-const SearchBox = ({ closeMenuOffcanvas }) => {
+interface SearchBoxProps {
+  closeMenuOffcanvas: () => void;
+}
+
+const SearchBox: React.FC<SearchBoxProps> = ({ closeMenuOffcanvas }) => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const keywordUrl = searchParams.get("keyword") || "";
-  const [keyword, setKeyword] = useState(keywordUrl);
+  const [keyword, setKeyword] = useState<string>(keywordUrl);
 
   useEffect(() => {
     setKeyword(keywordUrl);
   }, [keywordUrl]);
 
-  const searchHandler = (e) => {
+  const searchHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     navigate("/");
     searchParams.set("keyword", keyword.trim());
@@ -23,12 +27,16 @@ const SearchBox = ({ closeMenuOffcanvas }) => {
     scrollToTop();
   };
 
+  const handleKeywordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setKeyword(e.target.value);
+  };
+
   return (
     <Form onSubmit={searchHandler} className="d-flex">
       <Form.Control
         type="text"
         name="q"
-        onChange={(e) => setKeyword(e.target.value)}
+        onChange={handleKeywordChange}
         value={keyword}
         placeholder="What are you looking for?"
         className="mr-sm-2 ml-sm-5"
