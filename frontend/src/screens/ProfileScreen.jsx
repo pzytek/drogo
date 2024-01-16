@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { Table, Form, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
@@ -6,17 +5,15 @@ import { toast } from "react-toastify";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import Meta from "../components/Meta";
+import FormInputElement from "../components/FormInputElement";
 import { FaTimes } from "react-icons/fa";
 import { useProfileMutation } from "../slices/usersApiSlice";
 import { setCredentials } from "../slices/authSlice";
 import { useGetMyOrdersQuery } from "../slices/ordersApiSlice";
+import { useFormik } from "formik";
+import { registerSchema } from "../schemas";
 
 const ProfileScreen = () => {
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-
   const dispatch = useDispatch();
   const { userInfo } = useSelector((state) => state.auth);
 
@@ -25,82 +22,66 @@ const ProfileScreen = () => {
 
   const { data: orders, isLoading, error } = useGetMyOrdersQuery();
 
-  useEffect(() => {
-    if (userInfo) {
-      setName(userInfo.name);
-      setEmail(userInfo.email);
-    }
-  }, [userInfo.name, userInfo.email]);
+  const formFields = [
+    { label: "Name", id: "name", type: "text" },
+    { label: "Email", id: "email", type: "email" },
+    { label: "Password", id: "password", type: "password" },
+    { label: "Confirm password", id: "confirmPassword", type: "password" },
+  ];
 
-  const submitHandler = async (e) => {
-    e.preventDefault();
-    if (password !== confirmPassword) {
-      toast.error("Passwords do not match");
-    } else {
-      try {
-        const res = await updateProfile({
-          name,
-          email,
-          password,
-        }).unwrap();
-        dispatch(setCredentials({ ...res }));
-        toast.success("Profile updated successfully");
-      } catch (error) {
-        toast.error(error?.data?.message || error.error);
-      }
+  const onSubmit = async (values) => {
+    const { name, email, password } = values;
+
+    try {
+      const res = await updateProfile({
+        name,
+        email,
+        password,
+      }).unwrap();
+      dispatch(setCredentials({ ...res }));
+      toast.success("Profile updated successfully");
+    } catch (error) {
+      toast.error(error?.data?.message || error.error);
     }
   };
+
+  const { values, errors, touched, handleChange, handleBlur, handleSubmit } =
+    useFormik({
+      initialValues: {
+        name: userInfo?.name || "",
+        email: userInfo?.email || "",
+        password: "",
+        confirmPassword: "",
+      },
+      validationSchema: registerSchema,
+      onSubmit,
+    });
 
   return (
     <Row>
       <Meta title={"Drogo - User Profile"} />
       <Col md={3}>
         <h2>User Profile</h2>
-
-        <Form onSubmit={submitHandler}>
-          <Form.Group className="my-2" controlId="name">
-            <Form.Label>Name</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            ></Form.Control>
-          </Form.Group>
-
-          <Form.Group className="my-2" controlId="email">
-            <Form.Label>Email Address</Form.Label>
-            <Form.Control
-              type="email"
-              placeholder="Enter email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            ></Form.Control>
-          </Form.Group>
-
-          <Form.Group className="my-2" controlId="password">
-            <Form.Label>Password</Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Enter password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            ></Form.Control>
-          </Form.Group>
-
-          <Form.Group className="my-2" controlId="confirmPassword">
-            <Form.Label>Confirm Password</Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Confirm password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            ></Form.Control>
-          </Form.Group>
-
-          <Button type="submit" variant="primary">
+        <Form onSubmit={handleSubmit} autoComplete="off">
+          {formFields.map((field) => (
+            <FormInputElement
+              field={field}
+              handleChange={handleChange}
+              handleBlur={handleBlur}
+              touched={touched}
+              errors={errors}
+              values={values}
+            />
+          ))}
+          <Button
+            type="submit"
+            variant="primary"
+            className="my-2"
+            disabled={loadingUpdateProfile}
+          >
             Update
           </Button>
+
           {loadingUpdateProfile && <Loader />}
         </Form>
       </Col>

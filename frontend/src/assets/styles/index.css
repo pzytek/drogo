@@ -62,3 +62,12 @@ table th {
 .cursor-pointer:hover {
   cursor: pointer;
 }
+
+input.input-error,
+select.input-error {
+  border-color: tomato;
+}
+
+.error {
+  color: tomato;
+}

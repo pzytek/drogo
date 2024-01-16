@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import FormContainer from "../components/FormContainer";
@@ -20,9 +25,9 @@ const LoginScreen = () => {
 
   const [login, { isLoading }] = useLoginMutation();
   const { userInfo } = useSelector((state) => state.auth);
-  const { search } = useLocation();
-  const sp = new URLSearchParams(search);
-  const redirect = sp.get("redirect") || "/";
+
+  const [searchParams] = useSearchParams();
+  const redirect = searchParams.get("redirect") || "/";
 
   useEffect(() => {
     if (userInfo) {

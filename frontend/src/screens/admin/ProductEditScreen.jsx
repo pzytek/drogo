@@ -99,7 +99,7 @@ const ProductEditScreen = () => {
           </Message>
         ) : (
           <Form onSubmit={submitHandler}>
-            <Form.Group controlId="name" className="my-2">
+            <Form.Group className="my-3">
               <Form.Label>Name</Form.Label>
               <Form.Control
                 type="text"
@@ -108,11 +108,8 @@ const ProductEditScreen = () => {
                 onChange={(e) => setName(e.target.value)}
                 maxLength={35}
               ></Form.Control>
-              <Form.Text>
-                {`Maximum length: 35 characters. Current length: ${name.length}`}
-              </Form.Text>
             </Form.Group>
-            <Form.Group controlId="price" className="my-2">
+            <Form.Group controlId="price" className="my-3">
               <Form.Label>Price ($)</Form.Label>
               <Form.Control
                 type="number"
@@ -121,7 +118,7 @@ const ProductEditScreen = () => {
                 onChange={(e) => setPrice(e.target.value)}
               ></Form.Control>
             </Form.Group>
-            <Form.Group controlId="image" className="my-2">
+            <Form.Group controlId="image" className="my-3">
               <Form.Label>Image</Form.Label>
               <Form.Control
                 type="text"
@@ -136,7 +133,7 @@ const ProductEditScreen = () => {
               ></Form.Control>
               {loadingUpload && <Loader />}
             </Form.Group>
-            <Form.Group controlId="category" className="my-2">
+            <Form.Group controlId="category" className="my-3">
               <Form.Label>Category</Form.Label>
               <Form.Control
                 type="text"
@@ -145,7 +142,7 @@ const ProductEditScreen = () => {
                 onChange={(e) => setCategory(e.target.value)}
               ></Form.Control>
             </Form.Group>
-            <Form.Group controlId="brand" className="my-2">
+            <Form.Group controlId="brand" className="my-3">
               <Form.Label>Brand</Form.Label>
               <Form.Control
                 type="text"
@@ -154,7 +151,7 @@ const ProductEditScreen = () => {
                 onChange={(e) => setBrand(e.target.value)}
               ></Form.Control>
             </Form.Group>
-            <Form.Group controlId="countInStock" className="my-2">
+            <Form.Group controlId="countInStock" className="my-3">
               <Form.Label>Count in stock</Form.Label>
               <Form.Control
                 type="number"
@@ -163,7 +160,7 @@ const ProductEditScreen = () => {
                 onChange={(e) => setCountInStock(e.target.value)}
               ></Form.Control>
             </Form.Group>
-            <Form.Group controlId="description" className="my-2">
+            <Form.Group controlId="description" className="my-3">
               <Form.Label>Description</Form.Label>
               <Form.Control
                 as="textarea"
