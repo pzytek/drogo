@@ -43,6 +43,7 @@ const shippingSchema = yup.object().shape({
     .matches(nameRegex, "Only letters and spaces")
     .required("Country is required"),
 });
+
 const productSchema = yup.object().shape({
   name: yup.string().max(35, "Maximum length: 35").required("Name is required"),
   price: yup
@@ -60,13 +61,20 @@ const productSchema = yup.object().shape({
     .required("Brand is required"),
   count: yup
     .string()
-    .matches(countRegex, "Only positive integer numbers")
-    .required("Count in stock is required"),
+    .matches(countRegex, "Only non-negative integer numbers")
+    .required("Count is required"),
   description: yup
     .string()
     .max(200, "Maximum length: 200")
     .required("Description is required"),
 });
-const loginSchema = yup.object().shape({});
+
+const loginSchema = yup.object().shape({
+  email: yup
+    .string()
+    .email("Please enter a vaild email")
+    .required("Email is required"),
+  password: yup.string().required("Password is required"),
+});
 
 export { registerSchema, shippingSchema, productSchema, loginSchema };

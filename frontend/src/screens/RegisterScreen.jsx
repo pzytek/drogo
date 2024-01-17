@@ -36,7 +36,7 @@ const RegisterScreen = () => {
     { label: "Confirm password", id: "confirmPassword", type: "password" },
   ];
 
-  const onSubmit = async (values, actions) => {
+  const onSubmit = async () => {
     const { name, email, password } = values;
 
     try {
@@ -68,6 +68,7 @@ const RegisterScreen = () => {
       <Form onSubmit={handleSubmit} autoComplete="off">
         {formFields.map((field) => (
           <FormInputElement
+            key={field.id}
             field={field}
             handleChange={handleChange}
             handleBlur={handleBlur}

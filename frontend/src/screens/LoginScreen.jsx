@@ -1,25 +1,20 @@
-import { useEffect, useState } from "react";
-import {
-  Link,
-  useLocation,
-  useNavigate,
-  useSearchParams,
-} from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import FormContainer from "../components/FormContainer";
 import Loader from "../components/Loader";
 import Meta from "../components/Meta";
+import FormInputElement from "../components/FormInputElement";
 import InfoOverlay from "../components/InfoOverlay";
 import { useLoginMutation } from "../slices/usersApiSlice";
 import { setCredentials } from "../slices/authSlice";
 import { setLoginModal } from "../slices/uiSlice";
 import { toast } from "react-toastify";
+import { useFormik } from "formik";
+import { loginSchema } from "../schemas";
 
 const LoginScreen = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -35,8 +30,14 @@ const LoginScreen = () => {
     }
   }, [userInfo, redirect, navigate]);
 
-  const submitHandler = async (e) => {
-    e.preventDefault();
+  const formFields = [
+    { label: "Email", id: "email", type: "email" },
+    { label: "Password", id: "password", type: "password" },
+  ];
+
+  const onSubmit = async () => {
+    const { email, password } = values;
+
     try {
       const res = await login({ email, password }).unwrap();
       dispatch(setCredentials({ ...res }));
@@ -47,29 +48,32 @@ const LoginScreen = () => {
     }
   };
 
+  const { values, errors, touched, handleChange, handleBlur, handleSubmit } =
+    useFormik({
+      initialValues: {
+        email: userInfo?.email || "",
+        password: "",
+      },
+      validationSchema: loginSchema,
+      onSubmit,
+    });
+
   return (
     <FormContainer>
       <Meta title={"Drogo - Sign In"} />
       <h1>Sign In</h1>
-      <Form className="tutu" onSubmit={submitHandler}>
-        <Form.Group controlId="email" className="my-3">
-          <Form.Label>Email</Form.Label>
-          <Form.Control
-            type="email"
-            placeholder="Enter email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
-        <Form.Group controlId="password" className="my-3">
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            type="password"
-            placeholder="Enter password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
+      <Form onSubmit={handleSubmit} autoComplete="off">
+        {formFields.map((field) => (
+          <FormInputElement
+            key={field.id}
+            field={field}
+            handleChange={handleChange}
+            handleBlur={handleBlur}
+            touched={touched}
+            errors={errors}
+            values={values}
+          />
+        ))}
         <Button
           type="submit"
           variant="primary"

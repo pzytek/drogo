@@ -25,12 +25,14 @@ const ShippingScreen = () => {
   ];
 
   const onSubmit = () => {
+    const { address, city, postalCode, country } = values;
+
     dispatch(
       saveShippingAddress({
-        address: values.address,
-        city: values.city,
-        postalCode: values.postalCode,
-        country: values.country,
+        address,
+        city,
+        postalCode,
+        country,
       })
     );
     navigate("/payment");
@@ -53,9 +55,10 @@ const ShippingScreen = () => {
       <Meta title={"Drogo - Shipping"} />
       <CheckoutSteps step3 step4 />
       <h1>Shipping</h1>
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit} autoComplete="off">
         {formFields.map((field) => (
           <FormInputElement
+            key={field.id}
             field={field}
             handleChange={handleChange}
             handleBlur={handleBlur}

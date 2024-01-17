@@ -29,7 +29,7 @@ const ProfileScreen = () => {
     { label: "Confirm password", id: "confirmPassword", type: "password" },
   ];
 
-  const onSubmit = async (values) => {
+  const onSubmit = async () => {
     const { name, email, password } = values;
 
     try {
@@ -65,6 +65,7 @@ const ProfileScreen = () => {
         <Form onSubmit={handleSubmit} autoComplete="off">
           {formFields.map((field) => (
             <FormInputElement
+              key={field.id}
               field={field}
               handleChange={handleChange}
               handleBlur={handleBlur}

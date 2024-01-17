@@ -1,29 +1,26 @@
-import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Form, Button } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
 import FormContainer from "../../components/FormContainer";
+import Meta from "../../components/Meta";
+import FormInputElement from "../../components/FormInputElement";
 import { toast } from "react-toastify";
 import {
   useUpdateProductMutation,
   useGetProductDetailsQuery,
   useUploadProductImageMutation,
 } from "../../slices/productsApiSlice";
+import { Formik, Form } from "formik";
+import { productSchema } from "../../schemas";
+import FormCustomField from "../../components/FormCustomField";
 
 const ProductEditScreen = () => {
+  const navigate = useNavigate();
   const { id: productId } = useParams();
 
   const [uploadProductImage, { isLoading: loadingUpload }] =
     useUploadProductImageMutation();
-
-  const [name, setName] = useState("");
-  const [price, setPrice] = useState(0);
-  const [image, setImage] = useState("");
-  const [brand, setBrand] = useState("");
-  const [category, setCategory] = useState("");
-  const [countInStock, setCountInStock] = useState(0);
-  const [description, setDescription] = useState("");
 
   const {
     data: product,
@@ -35,22 +32,32 @@ const ProductEditScreen = () => {
   const [updateProduct, { isLoading: loadingUpdate }] =
     useUpdateProductMutation();
 
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (product) {
-      setName(product.name);
-      setPrice(product.price);
-      setImage(product.image);
-      setBrand(product.brand);
-      setCategory(product.category);
-      setCountInStock(product.countInStock);
-      setDescription(product.description);
+  const uploadFileHandler = async (values, e) => {
+    console.log(e.target.files[0]);
+    const formData = new FormData();
+    formData.append("image", e.target.files[0]);
+    try {
+      const res = await uploadProductImage(formData).unwrap();
+      toast.success(res.message);
+      console.log(e);
+      values.image = res.image;
+    } catch (error) {
+      toast.error(error?.data?.message || error.error);
     }
-  }, [product]);
+  };
 
-  const submitHandler = async (e) => {
-    e.preventDefault();
+  const formFields = [
+    { label: "Name", id: "name", type: "text" },
+    { label: "Price", id: "price", type: "text" },
+    { label: "Category", id: "category", type: "text" },
+    { label: "Brand", id: "brand", type: "text" },
+    { label: "Count", id: "count", type: "text" },
+    { label: "Description", id: "description", type: "text" },
+    { label: "Image", id: "image", type: "text" },
+  ];
+
+  const onSubmit = async (values) => {
+    const { name, price, image, brand, category, description, count } = values;
     try {
       await updateProduct({
         productId,
@@ -60,8 +67,8 @@ const ProductEditScreen = () => {
         brand,
         category,
         description,
-        countInStock,
-      });
+        countInStock: count,
+      }).unwrap();
       toast.success("Product updated");
       refetch();
       navigate("/admin/productlist");
@@ -70,16 +77,14 @@ const ProductEditScreen = () => {
     }
   };
 
-  const uploadFileHandler = async (e) => {
-    const formData = new FormData();
-    formData.append("image", e.target.files[0]);
-    try {
-      const res = await uploadProductImage(formData).unwrap();
-      toast.success(res.message);
-      setImage(res.image);
-    } catch (error) {
-      toast.error(error?.data?.message || error.error);
-    }
+  const initialValues = {
+    name: product?.name || "",
+    price: product?.price || "",
+    image: product?.image || "",
+    category: product?.category || "",
+    brand: product?.brand || "",
+    count: product?.countInStock || "",
+    description: product?.description || "",
   };
 
   return (
@@ -88,6 +93,7 @@ const ProductEditScreen = () => {
         Back
       </Button>
       <FormContainer>
+        <Meta title={"Drogo - Product Edit"} />
         <h1>Edit product</h1>
         {loadingUpdate && <Loader />}
 
@@ -98,90 +104,39 @@ const ProductEditScreen = () => {
             {error?.data?.message || error.error}
           </Message>
         ) : (
-          <Form onSubmit={submitHandler}>
-            <Form.Group className="my-3">
-              <Form.Label>Name</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                maxLength={35}
-              ></Form.Control>
-            </Form.Group>
-            <Form.Group controlId="price" className="my-3">
-              <Form.Label>Price ($)</Form.Label>
-              <Form.Control
-                type="number"
-                placeholder="Enter price"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-              ></Form.Control>
-            </Form.Group>
-            <Form.Group controlId="image" className="my-3">
-              <Form.Label>Image</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter image URL"
-                value={image}
-                onChange={(e) => setImage(e.target.value)}
-              ></Form.Control>
-              <Form.Control
-                label="Choose File"
-                onChange={uploadFileHandler}
-                type="file"
-              ></Form.Control>
-              {loadingUpload && <Loader />}
-            </Form.Group>
-            <Form.Group controlId="category" className="my-3">
-              <Form.Label>Category</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter category"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-              ></Form.Control>
-            </Form.Group>
-            <Form.Group controlId="brand" className="my-3">
-              <Form.Label>Brand</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter brand"
-                value={brand}
-                onChange={(e) => setBrand(e.target.value)}
-              ></Form.Control>
-            </Form.Group>
-            <Form.Group controlId="countInStock" className="my-3">
-              <Form.Label>Count in stock</Form.Label>
-              <Form.Control
-                type="number"
-                placeholder="Enter count in stock"
-                value={countInStock}
-                onChange={(e) => setCountInStock(e.target.value)}
-              ></Form.Control>
-            </Form.Group>
-            <Form.Group controlId="description" className="my-3">
-              <Form.Label>Description</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                placeholder="Enter description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                maxLength={200}
-              ></Form.Control>
-              <Form.Text>
-                {`Maximum length: 200 characters. Current length: ${description.length}`}
-              </Form.Text>
-            </Form.Group>
-            <Button type="submit" className="my-2">
-              Update
-            </Button>
-          </Form>
+          <Formik
+            enableReinitialize={true}
+            validationSchema={productSchema}
+            initialValues={initialValues}
+            onSubmit={(values) => onSubmit(values)}
+          >
+            {(props) => (
+              <Form onSubmit={props.handleSubmit} autoComplete="off">
+                {formFields.map((field) => (
+                  <FormCustomField
+                    key={field.id}
+                    name={field.id}
+                    type={field.type}
+                    label={field.label}
+                  />
+                ))}
+                <input
+                  id="file"
+                  name="file"
+                  type="file"
+                  onChange={(e) => uploadFileHandler(props.values, e)}
+                />
+                {loadingUpload && <Loader />}
+                {/* </Form.Group> */}
+                <Button type="submit" className="my-2">
+                  Update
+                </Button>
+              </Form>
+            )}
+          </Formik>
         )}
       </FormContainer>
     </>
   );
 };
-
 export default ProductEditScreen;
