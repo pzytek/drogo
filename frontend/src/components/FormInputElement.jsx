@@ -1,6 +1,5 @@
 import React from "react";
 import { Form } from "react-bootstrap";
-import { useField } from "formik";
 
 const FormInputElement = ({
   field,
@@ -10,7 +9,6 @@ const FormInputElement = ({
   errors,
   values,
 }) => {
-  // const [field,meta ] useField()
   return (
     <Form.Group key={field.id} className="my-3">
       <Form.Label>{field.label}</Form.Label>

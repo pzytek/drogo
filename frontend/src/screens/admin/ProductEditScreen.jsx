@@ -4,7 +4,6 @@ import Message from "../../components/Message";
 import Loader from "../../components/Loader";
 import FormContainer from "../../components/FormContainer";
 import Meta from "../../components/Meta";
-import FormInputElement from "../../components/FormInputElement";
 import { toast } from "react-toastify";
 import {
   useUpdateProductMutation,
@@ -21,7 +20,6 @@ const ProductEditScreen = () => {
 
   const [uploadProductImage, { isLoading: loadingUpload }] =
     useUploadProductImageMutation();
-
   const {
     data: product,
     isLoading,
@@ -33,13 +31,11 @@ const ProductEditScreen = () => {
     useUpdateProductMutation();
 
   const uploadFileHandler = async (values, e) => {
-    console.log(e.target.files[0]);
     const formData = new FormData();
     formData.append("image", e.target.files[0]);
     try {
       const res = await uploadProductImage(formData).unwrap();
       toast.success(res.message);
-      console.log(e);
       values.image = res.image;
     } catch (error) {
       toast.error(error?.data?.message || error.error);
@@ -58,6 +54,7 @@ const ProductEditScreen = () => {
 
   const onSubmit = async (values) => {
     const { name, price, image, brand, category, description, count } = values;
+
     try {
       await updateProduct({
         productId,
@@ -124,10 +121,10 @@ const ProductEditScreen = () => {
                   id="file"
                   name="file"
                   type="file"
+                  label="Choose file"
                   onChange={(e) => uploadFileHandler(props.values, e)}
                 />
                 {loadingUpload && <Loader />}
-                {/* </Form.Group> */}
                 <Button type="submit" className="my-2">
                   Update
                 </Button>
