@@ -1,7 +1,6 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Form, Button, Row, Col } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
 import FormContainer from "../components/FormContainer";
 import Loader from "../components/Loader";
 import Meta from "../components/Meta";
@@ -13,13 +12,14 @@ import { setLoginModal } from "../slices/uiSlice";
 import { toast } from "react-toastify";
 import { useFormik } from "formik";
 import { loginSchema } from "../schemas";
+import { useAppSelector, useAppDispatch } from "../hooks";
 
 const LoginScreen = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const [login, { isLoading }] = useLoginMutation();
-  const { userInfo } = useSelector((state) => state.auth);
+  const { userInfo } = useAppSelector((state) => state.auth);
 
   const [searchParams] = useSearchParams();
   const redirect = searchParams.get("redirect") || "/";

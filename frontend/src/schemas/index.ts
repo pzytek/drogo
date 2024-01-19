@@ -27,7 +27,7 @@ const registerSchema = yup.object().shape({
     .required("Password is required"),
   confirmPassword: yup
     .string()
-    .oneOf([yup.ref("password"), null], "Passwords must match")
+    .oneOf([yup.ref("password"), ""], "Passwords must match")
     .required("Confirm password"),
 });
 

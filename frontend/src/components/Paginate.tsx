@@ -1,14 +1,15 @@
+import React from "react";
 import { useSearchParams } from "react-router-dom";
 import { Pagination } from "react-bootstrap";
 import scrollToTop from "../utils/scrollToTop";
 
-const Paginate = ({ pages }) => {
+const Paginate = ({ pages }: { pages: number }) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const page = Number(searchParams.get("pageNumber") || 1);
+  const page: number = Number(searchParams.get("pageNumber") || 1);
 
-  const changePage = (pageNumber) => {
-    searchParams.set("pageNumber", pageNumber);
+  const changePage = (pageNumber: number) => {
+    searchParams.set("pageNumber", String(pageNumber));
     setSearchParams(searchParams);
     scrollToTop();
   };

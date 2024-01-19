@@ -1,8 +1,13 @@
+import React, { ReactNode } from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../hooks";
 
-const FormContainer = ({ children }) => {
-  const { loginModal } = useSelector((state) => state.ui);
+type FormContainerProps = {
+  children: ReactNode;
+};
+
+const FormContainer: React.FC<FormContainerProps> = ({ children }) => {
+  const { loginModal } = useAppSelector((state) => state.ui);
 
   return (
     <Container>
