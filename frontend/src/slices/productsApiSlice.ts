@@ -60,7 +60,7 @@ export const productsApiSlice = apiSlice.injectEndpoints({
         url: `${PRODUCTS_URL}/${productId}`,
         method: "DELETE",
       }),
-      providesTags: ["Product"],
+      invalidatesTags: ["Product"],
     }),
     createReview: builder.mutation({
       query: (data) => ({
@@ -69,10 +69,11 @@ export const productsApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
-    getTopProducts: builder.query({
+    getTopProducts: builder.query<any, void>({
       query: () => ({
         url: `${PRODUCTS_URL}/top-electronics`,
       }),
+      providesTags: ["Product"],
       keepUnusedDataFor: 5,
     }),
     getCategories: builder.query({
@@ -87,7 +88,6 @@ export const productsApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useGetProductsQuery,
-  useGetFilteredProductsQuery,
   useGetProductDetailsQuery,
   useCreateProductMutation,
   useUpdateProductMutation,

@@ -1,8 +1,15 @@
+import React from "react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { FaInfoCircle } from "react-icons/fa";
 
-const InfoOverlay = ({ info }) => {
-  const renderTooltip = (props) => <Tooltip id="tooltip">{props}</Tooltip>;
+interface InfoOverlayProps {
+  info: React.ReactNode;
+}
+
+const InfoOverlay: React.FC<InfoOverlayProps> = ({ info }) => {
+  const renderTooltip = (props: React.ReactNode) => (
+    <Tooltip id="tooltip">{props}</Tooltip>
+  );
 
   return (
     <OverlayTrigger

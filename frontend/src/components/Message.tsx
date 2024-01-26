@@ -3,7 +3,7 @@ import { Alert } from "react-bootstrap";
 
 type MessageProps = {
   variant: string;
-  children: string;
+  children: React.ReactNode;
 };
 
 const Message: React.FC<MessageProps> = ({ variant, children }) => {

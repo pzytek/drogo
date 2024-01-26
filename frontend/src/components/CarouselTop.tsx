@@ -1,16 +1,29 @@
+import React from "react";
 import { Link } from "react-router-dom";
 import { Carousel, Image, Card } from "react-bootstrap";
 import { useMediaQuery } from "react-responsive";
 import Loader from "./Loader";
 import Message from "./Message";
 import { useGetTopProductsQuery } from "../slices/productsApiSlice";
+import { errorMessage } from "../utils/helpers";
 
 const CarouselTop = () => {
   const { data: products, isLoading, error } = useGetTopProductsQuery();
 
   const isMediumScreen = useMediaQuery({ maxWidth: 768 });
 
-  const CardCarousel = ({ product }) => {
+  interface Product {
+    _id: string;
+    image: string;
+    name: string;
+    price: number;
+  }
+
+  interface CardCarouselProps<T> {
+    product: T;
+  }
+
+  const CardCarousel: React.FC<CardCarouselProps<Product>> = ({ product }) => {
     return (
       <Link to={`/product/${product._id}`}>
         <Card className="border-0">
@@ -36,12 +49,12 @@ const CarouselTop = () => {
   return isLoading ? (
     <Loader />
   ) : error ? (
-    <Message variant="danger">{error?.data?.message || error.error}</Message>
+    <Message variant="danger">{errorMessage(error)}</Message>
   ) : (
     <>
       <h2>Top Eelectronics</h2>
       <Carousel pause="hover" fade>
-        {products.map((product, index, array) => {
+        {products.map((product: Product, index: number, array: Product[]) => {
           const nextProduct =
             index < array.length - 1 ? array[index + 1] : array[0];
 
