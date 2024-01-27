@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useAppSelector, useAppDispatch } from "../hooks";
 import { useMediaQuery } from "react-responsive";
 import {
   Navbar,
@@ -26,11 +26,11 @@ const modeIconStyles = {
 };
 
 const Header = () => {
-  const { cartItems } = useSelector((state) => state.cart);
-  const { userInfo } = useSelector((state) => state.auth);
+  const { cartItems } = useAppSelector((state) => state.cart);
+  const { userInfo } = useAppSelector((state) => state.auth);
   const [darkMode, setDarkMode] = useState(true);
-  const offCanvasRef = useRef();
-  const dispatch = useDispatch();
+  const offCanvasRef = useRef<any>(null);
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const isXxxsScreen = useMediaQuery({ maxWidth: 320 });
@@ -39,13 +39,13 @@ const Header = () => {
 
   const logoutHandler = async () => {
     try {
-      await logoutApiCall().unwrap();
+      await logoutApiCall(null).unwrap();
       dispatch(logout());
       dispatch(resetCart());
       navigate("/");
       toast.success("Logged out successfully");
     } catch (error) {
-      toast.error(error);
+      toast.error(error as any);
     }
   };
 

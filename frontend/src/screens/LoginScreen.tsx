@@ -14,12 +14,24 @@ import { useFormik } from "formik";
 import { loginSchema } from "../schemas";
 import { useAppSelector, useAppDispatch } from "../hooks";
 
+interface FormProps {
+  email: string;
+  password: string;
+}
+
+interface UserInfoProps {
+  email?: string;
+}
+
 const LoginScreen = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const [login, { isLoading }] = useLoginMutation();
-  const { userInfo } = useAppSelector((state) => state.auth);
+
+  const userInfo: UserInfoProps = useAppSelector(
+    (state) => state.auth.userInfo
+  );
 
   const [searchParams] = useSearchParams();
   const redirect = searchParams.get("redirect") || "/";
@@ -30,7 +42,7 @@ const LoginScreen = () => {
     }
   }, [userInfo, redirect, navigate]);
 
-  const formFields = [
+  const formFields: { label: string; id: string; type: string }[] = [
     { label: "Email", id: "email", type: "email" },
     { label: "Password", id: "password", type: "password" },
   ];
@@ -44,12 +56,12 @@ const LoginScreen = () => {
       dispatch(setLoginModal(false));
       navigate(redirect);
     } catch (error) {
-      toast.error(error?.data?.message || error.error);
+      if (error instanceof Error) toast.error(error.message);
     }
   };
 
   const { values, errors, touched, handleChange, handleBlur, handleSubmit } =
-    useFormik({
+    useFormik<FormProps>({
       initialValues: {
         email: userInfo?.email || "",
         password: "",
@@ -60,7 +72,7 @@ const LoginScreen = () => {
 
   return (
     <FormContainer>
-      <Meta title={"Drogo - Sign In"} />
+      <Meta title="Drogo - Sign In" />
       <h1>Sign In</h1>
       <Form onSubmit={handleSubmit} autoComplete="off">
         {formFields.map((field) => (

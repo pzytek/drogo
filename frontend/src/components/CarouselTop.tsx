@@ -5,7 +5,7 @@ import { useMediaQuery } from "react-responsive";
 import Loader from "./Loader";
 import Message from "./Message";
 import { useGetTopProductsQuery } from "../slices/productsApiSlice";
-import { errorMessage } from "../utils/helpers";
+import { errorMessageFetching } from "../utils/helpers";
 
 const CarouselTop = () => {
   const { data: products, isLoading, error } = useGetTopProductsQuery();
@@ -49,7 +49,7 @@ const CarouselTop = () => {
   return isLoading ? (
     <Loader />
   ) : error ? (
-    <Message variant="danger">{errorMessage(error)}</Message>
+    <Message variant="danger">{errorMessageFetching(error)}</Message>
   ) : (
     <>
       <h2>Top Eelectronics</h2>

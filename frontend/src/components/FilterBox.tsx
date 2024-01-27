@@ -1,16 +1,23 @@
-import { useDispatch, useSelector } from "react-redux";
+import React from "react";
 import { Col, Row, Form, Collapse, InputGroup, Button } from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
-import { FaFilter } from "react-icons/fa";
 import { useGetCategoriesQuery } from "../slices/productsApiSlice";
 import { setFiltersColumn } from "../slices/uiSlice";
+import { useAppDispatch, useAppSelector } from "../hooks";
+import { FaFilter } from "react-icons/fa";
 import Loader from "./Loader";
 import Message from "./Message";
 import Rating from "./Rating";
+import { errorMessageFetching } from "../utils/helpers";
 
-const FilterBox = () => {
-  const dispatch = useDispatch();
-  const { filtersColumn } = useSelector((state) => state.ui);
+interface Category {
+  name: string;
+  qty: number;
+}
+
+const FilterBox: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const { filtersColumn } = useAppSelector((state) => state.ui);
   const [searchParams, setSearchParams] = useSearchParams();
   const categories = searchParams.getAll("categories") || [];
   const availability = searchParams.get("availability") || "All";
@@ -22,7 +29,7 @@ const FilterBox = () => {
     data: { categoryItems = [] } = {},
     isLoading,
     error,
-  } = useGetCategoriesQuery();
+  } = useGetCategoriesQuery(null);
 
   const showFiltersHandler = () => {
     dispatch(setFiltersColumn(!filtersColumn));
@@ -32,7 +39,7 @@ const FilterBox = () => {
     setSearchParams({});
   };
 
-  const handleFilterChange = (name, value) => {
+  const handleFilterChange = (name: string, value: string) => {
     if (name !== "categories") {
       searchParams.set(name, value);
     } else {
@@ -79,11 +86,13 @@ const FilterBox = () => {
                 <Loader />
               ) : error ? (
                 <Message variant="danger">
-                  {error?.data?.message || error.error}
+                  <Message variant="danger">
+                    {errorMessageFetching(error)}
+                  </Message>
                 </Message>
               ) : (
                 <Col>
-                  {categoryItems.map((category) => (
+                  {categoryItems.map((category: Category) => (
                     <Form.Check
                       key={category.name}
                       type="checkbox"
@@ -133,7 +142,7 @@ const FilterBox = () => {
                     key={arrayRating}
                     type="radio"
                     className="my-2"
-                    label={<Rating value={arrayRating} reviews={0} />}
+                    label={<Rating value={Number(arrayRating)} reviews={0} />}
                     id={String(arrayRating)}
                     name="rating"
                     checked={arrayRating === rating}
@@ -165,9 +174,9 @@ const FilterBox = () => {
                 <Form.Control
                   type="text"
                   placeholder="Min."
-                  value={minPrice}
+                  value={minPrice.toString()}
                   onChange={(e) =>
-                    handleFilterChange("minPrice", Number(e.target.value))
+                    handleFilterChange("minPrice", e.target.value)
                   }
                   className="text-end"
                 />

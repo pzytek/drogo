@@ -1,25 +1,14 @@
 import React from "react";
 import { Card, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import Rating from "./Rating";
 import { addToCart } from "../slices/cartSlice";
 import { setLoginModal, setCartOffcanvas } from "../slices/uiSlice";
 import { useAppSelector, useAppDispatch } from "../hooks";
+import { Item } from "../types";
 
 interface ProductProps {
-  product: {
-    _id: string;
-    name: string;
-    image: string;
-    description: string;
-    brand: string;
-    category: string;
-    price: number;
-    countInStock: number;
-    rating: number;
-    numReviews: number;
-  };
+  product: Item;
 }
 
 const Product: React.FC<ProductProps> = ({ product }) => {

@@ -1,28 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { updateCart } from "../utils/cartUtils";
-
-interface Review {
-  user: string;
-  name: string;
-  rating: number;
-  comment: string;
-}
-
-interface Item {
-  _id: string;
-  user: string;
-  name: string;
-  image: string;
-  brand: string;
-  cateogory: string;
-  description: string;
-  rating: number;
-  numReviews: number;
-  price: number;
-  countInStock: number;
-  reviews: Review[];
-  qty: number;
-}
+import { Review, Item } from "../types";
 
 interface CartState {
   cartItems: Item[];
@@ -56,7 +34,6 @@ const cartSlice = createSlice({
       } else {
         state.cartItems = [...state.cartItems, item];
       }
-      console.log(state);
       return updateCart(state);
     },
     removeFromCart: (state, action) => {

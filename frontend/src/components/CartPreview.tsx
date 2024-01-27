@@ -1,5 +1,6 @@
+import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useAppSelector, useAppDispatch } from "../hooks";
 import {
   Row,
   Col,
@@ -12,14 +13,16 @@ import {
 import Message from "./Message";
 import { addToCart } from "../slices/cartSlice";
 import { setCartOffcanvas } from "../slices/uiSlice";
+import { Item } from "../types";
+
 const CartPreview = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const { cartItems } = useSelector((state) => state.cart);
-  const { cartOffcanvas } = useSelector((state) => state.ui);
+  const { cartItems } = useAppSelector((state) => state.cart);
+  const { cartOffcanvas } = useAppSelector((state) => state.ui);
 
-  const addToCartHandler = async (product, qty) => {
+  const addToCartHandler = async (product: Item, qty: number) => {
     dispatch(addToCart({ ...product, qty }));
   };
 

@@ -13,7 +13,7 @@ function isErrorWithMessage(error: unknown): error is { message: string } {
   );
 }
 
-export function errorMessage(error: any) {
+export function errorMessageFetching(error: any) {
   return isFetchBaseQueryError(error)
     ? "error" in error
       ? error.error
